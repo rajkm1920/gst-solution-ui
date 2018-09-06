@@ -1,0 +1,74 @@
+<div class="card">
+
+    <div class="card-header">
+      <h3 class="card-header-text">Upload Invoces</h3>
+    </div>
+    <div class="card-body">
+      <div class="row">
+
+      <div class="col-md- col-xl-12">
+          <form [formGroup]="invoiceForm" (ngSubmit)="fileGSTInvoice()">
+                <div class="col-md-12 col-xl-12">
+                        <div class="form-group row">
+
+                        <div class="col-sm-3 ">
+                                <h5><label>Select GST Number</label></h5>
+                                <select name="select"  class="form-control form-control-inverse"  (change)="getPlanofGSTid(customerGstinId.value);" formControlName="gstinId" #customerGstinId>
+                                  <option value="0" selected>Select GSTN</option>
+                                  <option *ngFor="let gstn of cust_gstn" value="{{gstn.gstId}}">
+                                          {{gstn.gstin}}
+                                      </option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-sm-3 ">
+                              <h5><label>Select Scheme</label></h5>
+                              <select name="select2"  class="form-control form-control-inverse"  formControlName="customerGstinPlanId">
+                              <ng-container *ngIf="customerGstinId.value!='0'; else elseoption" >
+                                  <option  *ngFor="let scheme of plans " value="{{scheme.gstPlanId}}">{{scheme.planType}}</option>
+                              </ng-container>
+                              <ng-template #elseoption>
+                                      <option value="0">No plan for GSTN </option>
+                              </ng-template>
+                              </select>
+                          </div>
+                        <div class="col-sm-6 ">
+                                <h5><label>ADD Invoice Title</label></h5>
+                                <input type="text"  class="form-control " placeholder="Enter Title" value="Repot Title" formControlName="title">
+                        </div>
+                        </div>
+                  </div>
+<hr>
+                  <div class="col-md-12" align="right">
+                    <button type="button" (click)="addMoreImages();" class="btn btn-grd-danger " > Add More Invoice</button>&nbsp;&nbsp;
+
+                  </div>
+
+
+                    <div class="form-group row" id="formId" formArrayName="invoiceDocuments">
+                        <div class="col-sm-6 " *ngFor="let any of invoiceDocuments.controls; let i=index" >
+                            <h5><label>ADD Invoice Image</label></h5><br><a class="f-right"  style="margin-top:-4px ;color: red" (click)="removeInvoiceImage(i)" ><fa name="times-circle-o"></fa></a>
+                            <input type="file"  class="form-control " accept="image/*" [formControlName]="i" (change)="getfileonChange($event,i)">
+
+                        </div>
+                    </div>
+
+                <div class="form-group row " >
+                        <div class="col-sm-3"> </div>
+                        <div class="col-sm-6 text-center">
+
+                            <button type="submit" class="btn btn-grd-success " >Submit </button>
+                        </div>
+                        <div class="col-sm-3"></div>
+
+                    </div>
+
+        </form>
+      </div>
+
+
+      </div>
+    </div>
+    </div>
+    <ng2-toasty [position]="position"></ng2-toasty>

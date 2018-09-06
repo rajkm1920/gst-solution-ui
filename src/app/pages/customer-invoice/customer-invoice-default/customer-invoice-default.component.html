@@ -1,0 +1,161 @@
+<div class="row">
+    <div class="col-lg-12">
+      <div class="md-tabs">
+
+
+        <ngb-tabset>
+          <ngb-tab title="" >
+              <ng-template ngbTabTitle>
+                  <div (click)="unProcessInvoiceList(1,0)">Under Process Invoices</div>
+                  <!-- <div >Under Process Invoices</div> -->
+              </ng-template>
+            <ng-template ngbTabContent>
+              <div [@fadeInOutTranslate] class="m-t-15">
+
+                    <!-- Basic table card start -->
+      <app-card [title]="'Under Process Invoices'"    [classHeader]="true" [blockClass]="'table-border-style'">
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+              <tr>
+                  <!-- <th>Sno. </th> -->
+                <th>GSTIN</th>
+
+                <!-- <th>GST Plan</th> -->
+
+                <th>GST Plan</th>
+
+                <th>Upload Date</th>
+                <th>Current Status</th>
+                <th>Image</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- <tr *ngFor="let upList of unProcessList; let i=index "> -->
+                  <tr *ngFor="let upList of unProcessList | paginate: { itemsPerPage: 5, currentPage: p }">
+                  <!-- <td>{{i+1}}</td> -->
+                  <td>{{upList.gstIn}}</td>
+                  <td>{{upList.scheme}}</td>
+                  <!-- <td><img class="img-radius" style="width: 100px;height: 30px;"  src="{{backendUrl}}{{upList.documentPath}}" alt="Not available"> </td> -->
+
+                  <td>{{upList.createTime}}</td>
+
+
+                  <ng-container *ngIf="upList.status=='ADDED'; else elseTemplate">
+                      <td style="color: green">{{upList.status}}</td>
+                      <td>
+                        <button class="btn btn-info  btn-sm" style="width: 80px" (click)="viewImage(content,upList.documentPath)" >View</button>
+                      </td>
+                      <td> <button class="btn btn-danger  btn-sm" style="width: 80px" (click)="removeInvoiceDocument(upList.documentId)" >Remove</button></td>
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                      <td style="color: red;">{{upList.status}}</td>
+                      <td>
+                        <button class="btn btn-info  btn-sm" style="width: 80px" (click)="viewImage(content,upList.documentPath)" >View</button>
+                      </td>
+                      <td> <button class="btn btn-default  btn-sm" style="width: 80px" >Removed</button></td>
+                  </ng-template>
+
+
+
+              </tr>
+
+
+              </tbody>
+            </table>
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
+
+        </app-card>
+
+
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab   >
+              <ng-template ngbTabTitle>
+                  <div (click)="processInvoiceList(1,0)">Processed Invoices</div>
+              </ng-template>
+            <ng-template ngbTabContent >
+              <div [@fadeInOutTranslate] class="m-t-15">
+
+           <!-- Basic table card start -->
+      <app-card [title]="'Processed Invoices'" [classHeader]="false" [blockClass]="'table-border-style'">
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Invoice Type</th>
+                <!-- <th>IGST %</th> -->
+                <th>Title</th>
+                <!-- <th>CGST %</th> -->
+                <th>Taxable value</th>
+                <!-- <th>SGST %</th> -->
+                <th>Nature</th>
+                <th>GST(Total)</th>
+                <th>Status</th>
+                <th>Invoice Date</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let pList of processList | paginate: { itemsPerPage: 5, currentPage: p }">
+                <td>{{ pList.type }}</td>
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <ng-container *ngIf="pList.invoiceTitle!=null && pList.invoiceTitle!=''; else elseTemplate">
+                  <td >{{ pList.invoiceTitle }}</td>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <td >NOT AVAILABLE</td>
+                </ng-template>
+
+
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <td>{{ pList.taxableValue }}</td>
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <td>{{ pList.nature }}</td>
+                <td>{{ pList.cgstTotal + pList.igstTotal +  pList.sgstTotal }}</td>
+                <td style="color: green">{{ pList.status }}</td>
+                <td>{{ pList.invoiceDate }}</td>
+                <td>&nbsp;<button class="btn btn-success  btn-icon"><i class="icofont icofont-eye-alt"></i></button></td>
+              </tr>
+
+              </tbody>
+            </table>
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
+        </app-card>
+
+
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+        </ngb-tabset>
+
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #content  let-c="close" let-d="dismiss" >
+    <!-- <div class="modal-header">
+      <h4 class="modal-title">Image </h4>
+      <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+        <span aria-hidden="true" style="color: red;">&times;</span>
+      </button>
+    </div> -->
+    <div class=" row modal-body">
+
+      <img style="width: 100%;height: 400px"  src="{{IMGSRC}}" alt="Not available">
+
+    </div>
+
+    <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="c('Close click')">Close</button>
+    </div> -->
+  </ng-template>

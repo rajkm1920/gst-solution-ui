@@ -1,0 +1,326 @@
+<div class="card">
+  
+  <div class="card-body">
+      <div class="col-md-12">
+          <div class="alert alert-success alert-dismissable" *ngIf="hasSuccessAlert" >
+              <button type="button" class="close" data-dismiss="alert" (click)="hideSuccessAlert()">X</button>
+            <strong >{{response.message}}</strong>
+         </div>
+         </div>
+      <form [formGroup]="salesAndPurchaseForm"  #formDir="ngForm" (ngSubmit)="salesAndPurchaseFormSubmit()">
+         
+    <div class="row">
+        
+
+      <div class="col-md- col-xl-12"  >
+        <ul>
+          <li *ngFor="let doc of invoiceDocumentList; let i=index " align ="center" style="border: solid black 1px;margin-right: 1%;margin-bottom: 1%">
+            <input type="checkbox" formArrayName="docIdArr"  id="cb_{{doc.documentId}}" (change)="changeInvoiceDocument(doc.documentId,$event.target.checked,doc.documentPath)" />
+            <label for="cb_{{doc.documentId}}" >
+              <img  src="{{backendUrl}}{{doc.documentPath}}" /><br>
+              
+            </label>
+             <!-- <i  aria-hidden="true" style="cursor: pointer;"  (click)="viewImage(doc.documentPath)">View</i>  -->
+            
+          </li>
+        </ul>
+      </div> 
+      <div class="col-md- col-xl-6">
+        
+          <div class="form-group row">
+            <div class="col-sm-6 " align="center">
+                <h5>
+                    <label>Invoice Type</label>
+                  </h5>
+              <select class="form-control" formControlName="type" (change)="onchangeInvoiceType($event)" required >
+                <option value=""> Select Invoice Type</option>
+                <option value="SALES"> Sales Ledger</option>
+                <option value="PURCHASE"> Purchase Ledger</option>
+              </select>
+               
+            </div>
+            <div class="col-sm-6 ">
+              <h5>
+                <label>{{userRole}}</label>
+              </h5>
+              <input type="hidden" [(ngModel)]="invoiceProcessedId" formControlName="processInvoiceid">
+              <input type="hidden"  formControlName="invoiceId">
+              <input type="hidden"  formControlName="reportId">
+              <input type="text" class="form-control "  formControlName="name"  placeholder="Enter Customer Name">
+         
+              
+            </div>
+            </div>
+            <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5>
+                <label>GST Number</label>
+              </h5>
+              <select  class="form-control"  formControlName="gstId" (change)="getPlanforGSTN(selectedGstId.value)" #selectedGstId>
+                <option value="">Select GSTN </option>
+                <option  *ngFor="let gst of gstnNumbers; let i=index"  value="{{gst.gstId}}">{{gst.gstin}}
+                </option>
+
+              </select>
+            </div>
+            
+            <!-- <ng-container *ngIf="selectedGstId.value!='0';"> -->
+              <div class="col-sm-6 ">
+                <h5>
+                  <label>GSTN Scheme</label>
+                </h5>
+                <select  class="form-control"  formControlName="schemeType" >
+                    <option value="">Select Scheme</option>
+                  <option *ngFor="let plan of schemeType;" value="{{plan.gstPlanId}}">{{plan.planType}}
+                  </option>
+  
+                </select>
+              </div>
+            <!-- </ng-container> -->
+          </div>
+            
+          <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5>
+                <label>Invoice No</label>
+              </h5>
+              <input type="text" class="form-control" formControlName="invoiceNo" placeholder="Enter Invoice No">
+            </div>
+         
+            <div class="col-sm-6 ">
+              <h5>
+                <label>Nature of Invoice </label>
+              </h5>
+              <select class="form-control" formControlName="natureOfInvoice" required>
+                  <option value="">select Invoice nature</option>
+                  <option value="INVOICE">INVOICE</option>
+                  <option value="CREDIT NOTE">CREDIT NOTE</option>
+
+              </select>
+              
+            </div>
+            </div>
+            
+            <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5>
+                <label>{{userRole}} State</label>
+              </h5>
+              <select class="form-control" formControlName="state" required>
+                  <option value="">Select State</option>
+                  <option *ngFor="let state of stateArray;" value="{{state.state}}">{{state.state}}
+                    </option>
+
+              </select>
+            </div>
+           
+            <div class="col-sm-6 ">
+              <h5>
+                <label>Invoice Date </label>
+              </h5>
+              <input type="date" class="form-control"  formControlName="invoiceDate" placeholder="Enter Date">
+              
+            </div>
+          </div>
+           
+           
+          <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5>
+                <label>HSN</label>
+              </h5>
+              <input type="text" class="form-control " formControlName="hsn" placeholder="Enter HSN">
+            </div>
+            <div class="col-sm-6 ">
+              <h5>
+                <label>Quantity</label>
+              </h5>
+              <input  min="0" type="number" class="form-control" formControlName="quantity" placeholder="Enter Quantity ">
+            </div>
+            </div>
+       
+
+            <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5>
+                <label>Rate </label>
+              </h5>
+              <input  min="0" type="number" class="form-control " formControlName="rate" placeholder="Enter Rate">
+            </div>
+            <div class="col-sm-6 ">
+              <h5>
+                <label>Invoice value</label>
+              </h5>
+              <input  min="0" type="number" class="form-control" formControlName="invoiceValue" placeholder="Invoice Value ">
+            </div>
+            </div>
+         
+
+            <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5>
+                <label>Taxable Value</label>
+              </h5>
+              <input (input)='calculateAmountKeyPress($event)' type="number" value="{{taxableValueNgModel}}" [(ngModel)]="taxableValueNgModel"  min="0" class="form-control" formControlName="taxableValue" placeholder="Taxable Value ">
+            </div>
+            <div class="col-sm-6 ">
+                <h5>
+                  <label>Nature</label>
+                </h5>
+                <select class="form-control" formControlName="nature" required>
+                    <option value="">select nature</option>
+                    <option value="INTER STATE">INTER STATE</option>
+                    <option value="INTERA STATE">INTERA STATE</option>
+  
+                </select>
+               
+              </div>
+            </div>
+
+            <div class="form-group row">
+            <div class="col-sm-4 ">
+              <h5>
+                <label>IGST </label>
+              </h5>
+              <select (change)="setGSTPercentage(igstPercent.value,'IGST')" class="form-control" formControlName="igstPercent" #igstPercent>
+                <option value=""> Select IGST</option>
+                <option value="0"> GST @Nil</option>
+                <option value="3"> GST @ 3%</option>
+                <option value="5"> GST @ 5%</option>
+                <option value="12"> GST @ 12%</option>
+                <option value="18"> GST @ 18%</option>
+                <option value="28"> GST @ 28%</option>
+              </select>
+            </div>
+            <div class="col-sm-4 ">
+              <h5>
+                <label>CGST </label>
+              </h5>
+              <select  (change)="setGSTPercentage(cgstPercent.value,'CGST')" class="form-control" formControlName="cgstPercent" #cgstPercent>
+                  <option value=""> Select CGST</option>
+                <option value="0">GST @Nil</option>
+                <option value="1.5"> GST @ 1.5%</option>
+                <option value="2.5"> GST @ 2.5%</option>
+                <option value="6"> GST @ 6%</option>
+                <option value="9"> GST @ 9%</option>
+                <option value="14"> GST @ 14%</option>
+              </select>
+            </div>
+            <div class="col-sm-4 ">
+              <h5>
+                <label>SGST </label>
+              </h5>
+              <select (change)="setGSTPercentage(sgstPercent.value,'SGST')" class="form-control" formControlName="sgstPercent" #sgstPercent>
+                  <option value=""> Select SGST</option>
+                <option value="0">GST @Nil</option>
+                <option value="1.5"> GST @ 1.5%</option>
+                <option value="2.5"> GST @ 2.5%</option>
+                <option value="6"> GST @ 6%</option>
+                <option value="9"> GST @ 9%</option>
+                <option value="14"> GST @ 14%</option>
+              </select>
+         
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-4 ">
+              <h5>
+                <label>Total IGST </label>
+              </h5>
+              <input [value]="IGSTtotalCalcValue" class="form-control" formControlName="igstTotal" type="text" readonly>
+            </div>
+            <div class="col-sm-4 ">
+              <h5>
+                <label>Total CGST </label>
+              </h5>
+              <input [value]="CGSTtotalCalcValue" class="form-control" formControlName="cgstTotal" type="text" readonly>
+            </div>
+            <div class="col-sm-4 ">
+              <h5>
+                <label>Total SGST </label>
+              </h5>
+              <input  [value]="SGSTtotalCalcValue" class="form-control" formControlName="sgstTotal" type="text" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row ">
+              <div class="col-md-12">
+                <div class="alert alert-danger alert-dismissable" *ngIf="hasError" >
+                    <button type="button" class="close" data-dismiss="alert" (click)="hideRequiredAlert()">X</button>
+                  <strong > Required fields are Mandatory</strong>
+               </div>
+  
+               <div  class="alert alert-danger alert-dismissable" *ngIf="invoiceSelectError" >
+                  <button type="button" class="close" data-dismiss="alert" (click)="hideInvoiceRequiredAlert()">X</button>
+                <strong > Please select any Invoice</strong>
+             </div>
+            </div>
+             </div>
+  
+
+          <div class="form-group row">
+              <div class="col-sm-4 ">
+                  <h5>
+                    <label>Month</label>
+                  </h5>
+                  <select  class="form-control" formControlName="month">
+                      <option value=""> Select Month</option>
+                      <option [value]="month.monthNo" *ngFor="let month of monthArray"  >
+                        {{month.month}}</option>
+                      
+                    </select>
+                </div>
+                <div class="col-sm-4 ">
+                  <h5>
+                    <label>Year</label>
+                  </h5>
+                  <select  class="form-control" formControlName="year">
+                      <option value=""> Select Year</option>
+                      <option [value]="year.year" *ngFor="let year of yearArray"  >
+                        {{year.year}}</option>
+                      
+                    </select>
+                </div>
+              <div class="col-sm-4 ">
+                <h5 style="visibility: hidden;">
+                  <label>Total SGST </label>
+                </h5>
+                <button type="submit" class="btn btn-grd-success btn-block ">Submit </button>
+              </div>
+            </div>
+          
+
+
+        
+          
+                <!-- <div  *ngIf="salesAndPurchaseForm.hasError('required', 'type') || salesAndPurchaseForm.hasError('required', 'name')
+                || salesAndPurchaseForm.hasError('required', 'gstId')|| salesAndPurchaseForm.hasError('required', 'schemeType')
+                || salesAndPurchaseForm.hasError('required', 'invoiceNo')|| salesAndPurchaseForm.hasError('required', 'natureOfInvoice')
+                || salesAndPurchaseForm.hasError('required', 'state')|| salesAndPurchaseForm.hasError('required', 'invoiceDate')
+                || salesAndPurchaseForm.hasError('required', 'hsn')|| salesAndPurchaseForm.hasError('required', 'quantity')
+                || salesAndPurchaseForm.hasError('required', 'rate')|| salesAndPurchaseForm.hasError('required', 'invoiceValue')
+                || salesAndPurchaseForm.hasError('required', 'taxableValue')|| salesAndPurchaseForm.hasError('required', 'igstPercent')
+                || salesAndPurchaseForm.hasError('required', 'cgstPercent')|| salesAndPurchaseForm.hasError('required', 'sgstPercent') 
+                && formDir.submitted" class="alert alert-danger">
+                   Required fields are Mandatory
+                   </div> -->
+
+        
+      </div>
+      <!-- style="border: 2px solid gray" -->
+      <div class="col-md- col-xl-6" >
+        <div style="padding: 5px; height: 100%;">
+          <img  width="100%;" height="100%;" src="{{currimageUrl}}" />
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+  </div>
+</div>
+
+
+
+
+<ng2-toasty></ng2-toasty>

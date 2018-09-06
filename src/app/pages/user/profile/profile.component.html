@@ -1,0 +1,117 @@
+<div class="card">
+  <!-- <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Modal title</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>One fine body&hellip;</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+        </div>
+      </ng-template>
+  <button class="btn btn-outline-primary mb-2 mr-2" (click)="openLg(content)">Large modal</button> -->
+  <div class="card-header">
+    <h3 class="card-header-text">Your Profile</h3>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <ng-container *ngIf="httpPlanMsg=='success';">
+        <div class="col-md- col-xl-12 alert alert-success " style="background-color:olivedrab;color: white">
+          <button class="close" data-dismiss="alert" aria-label="close" (click)="closeSuccessDiv();">&times;</button>
+          <strong>Congrats!</strong> Your plan will be activated once your payment is verified.
+        </div>
+      </ng-container>
+
+      <div class="col-md- col-xl-12">
+        <form [formGroup]="editProfileForm" (ngSubmit)="editProfile()">
+          <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5><label>Full Name</label></h5>
+              <input type="text" class="form-control" formControlName="name" placeholder="Enter Name">
+            </div>
+            <div class="col-sm-6 ">
+              <h5><label>Email Address</label></h5>
+              <input type="email" class="form-control " formControlName="email" placeholder="Enter Email">
+            </div>
+
+          </div>
+          <!-- <div class="form-group row">
+          <div class="col-sm-6 ">
+            <h5><label>DOB</label></h5>
+              <input type="date" class="form-control " placeholder="Enter DOB" value="19/07/1970" >
+             </div>
+      <div class="col-sm-6 ">
+          <h5><label>PAN Number</label></h5>
+       <input type="text" class="form-control"  placeholder="Enter PAN Number" value="SDFGR1234V">
+      </div>
+
+      </div> -->
+          <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5><label>Contact</label></h5>
+              <input type="number" class="form-control " readonly="readonly" formControlName="contact" placeholder="Enter Contact"
+                value="8826721105">
+            </div>
+            <div class="col-sm-6 ">
+              <h5><label>Set Pin</label></h5>
+              <input type="password" class="form-control" formControlName="password" placeholder="Enter Pin" value="">
+            </div>
+
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6 ">
+              <h5> <label>Address </label></h5>
+              <input type="text" class="form-control " formControlName="address" placeholder="Enter Address" value="E block Shastrinagar">
+            </div>
+            <!-- <div class="col-sm-6 ">
+          <h5><label>Address 2</label></h5>
+       <input type="text" class="form-control " placeholder="Enter Address" value="Gurugram ,Haryana">
+      </div> -->
+
+          </div>
+          <div class="form-group row ">
+            <div class="col-sm-3"> </div>
+            <div class="col-sm-6 text-center">
+              <button type="submit" class="btn btn-grd-success " style="color: black">Submit Data </button>
+            </div>
+            <div class="col-sm-3"></div>
+
+          </div>
+        </form>
+      </div>
+      <hr>
+      <div class="card-header">
+        <h3 class="card-header-text">Your active GST Details</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>GSTIN </th>
+              <th>Plan </th>
+              <th>Scheme</th>
+              <th>Proposals</th>
+              <th>Business Name</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let gstlist of gstdetails | paginate: { itemsPerPage: 5, currentPage: p }">
+              <td>{{ gstlist.gstin }}</td>
+              <td>{{ gstlist.plan }}</td>
+              <td>{{ gstlist.scheme }}</td>
+              <td>{{ gstlist.proposals }}</td>
+              <td>{{ gstlist.businessName }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+<ng2-toasty [position]="position"></ng2-toasty>

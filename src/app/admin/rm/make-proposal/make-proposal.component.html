@@ -1,0 +1,554 @@
+<div class="card">
+  <!-- <div class="card-header">
+    <h3 class="card-header-text">Track GST Reports</h3>
+  </div> -->
+  <div class="card-body">
+    <div class="row  icon-btn">
+      <div class="col-md- col-xl-12">
+
+        <!-- next row///////////// -->
+        <div class="form-group row">
+
+
+
+          <div class="col-sm-3 ">
+            <label>GST Number</label>
+
+            <select (change)="getGstPlans($event)" *ngIf="gstnArray.length>1" name="select" class="form-control form-control-inverse"
+              #customerGstin>
+              <!-- <option value="0">Select</option> -->
+              <option *ngFor="let gstn of gstnArray" [value]="gstn.gstId">
+                {{gstn.gstin}}
+
+              </option>
+            </select>
+            <select style="opacity: 1;" [disabled]="true" *ngIf="gstnArray.length==1" name="select" class="form-control form-control-inverse"
+              #customerGstin>
+              <option *ngFor="let gstn of gstnArray" [value]="gstn.gstId">
+                {{gstn.gstin}}
+
+              </option>
+            </select>
+            <select [disabled]="true" *ngIf="gstnArray.length==0" name="select" class="form-control form-control-inverse" #customerGstin>
+              <option value="0">
+                no gst registered
+
+              </option>
+            </select>
+          </div>
+
+
+          <div class="col-sm-3 ">
+            <label>Customer</label>
+            <input style="background-color: #fff;border: 1px solid #000" type="text" class="form-control " readonly value="{{customerName}}">
+            <!-- <select  *ngIf="gstnArray.length>1"  class="form-control form-control-inverse"
+                #customerCompany>
+                <option value="0">Select</option>
+                <option *ngFor="let gstn of gstnArray" >
+                  {{gstn.businessName}}
+  
+                </option>
+              </select>
+
+              <select style="opacity: 1;" [disabled]="true" *ngIf="gstnArray.length==1" name="select" class="form-control form-control-inverse"
+              #customerCompany>
+              <option *ngFor="let gstn of gstnArray" >
+                {{gstn.businessName}}
+
+              </option>
+            </select>
+            <select style="opacity: 1;" [disabled]="true" *ngIf="gstnArray.length==0" name="select" class="form-control form-control-inverse" #customerCompany>
+              <option value="0">
+               
+
+              </option>
+            </select> -->
+          </div>
+
+          <div class="col-sm-6 ">
+            <label>GST Type</label>
+            <select (change)="setSelectedItr($event)" name="select" class="form-control form-control-inverse" #itrHashType>
+              <!-- <option   value="0">Select</option> -->
+              <option *ngFor="let itr of itrType" [value]="itr.itrId">
+                {{itr.itr}}
+
+              </option>
+            </select>
+
+          </div>
+
+
+
+        </div>
+
+
+        <!-- next row///////////// -->
+        <div class="form-group row">
+
+          <div class="col-sm-3 ">
+            <label>Scheme</label>
+            <select (change)="getItrType($event)" *ngIf="gstnPlanArray.length>1" name="select" class="form-control form-control-inverse"
+              #schemeType>
+              <!-- <option value="0">Select</option> -->
+              <option *ngFor="let gstnPlan of gstnPlanArray" [value]="gstnPlan.gstPlanId">
+                {{gstnPlan.planType}}
+
+              </option>
+            </select>
+            <select style="opacity: 1;" name="select" [disabled]="true" *ngIf="gstnPlanArray.length==1" class="form-control form-control-inverse"
+              #schemeType>
+              <option *ngFor="let gstnPlan of gstnPlanArray" [value]="gstnPlan.gstPlanId">
+                {{gstnPlan.planType}}
+
+
+              </option>
+            </select>
+
+            <select [disabled]="true" name="select" *ngIf="gstnPlanArray.length==0" class="form-control form-control-inverse" #schemeType>
+              <option value="0">
+                no plan activated
+
+              </option>
+            </select>
+          </div>
+
+          <div class="col-sm-2 ">
+            <label>Month</label>
+            <select (change)="getMonthByItrType($event)" name="select" class="form-control form-control-inverse" #selectMonth>
+              <option *ngFor="let month of monthArray" [selected]="month.monthNo === currMonth" [value]="month.monthNo">
+                {{month.month}}
+
+              </option>
+            </select>
+          </div>
+
+
+
+
+
+
+
+
+          <div class="col-sm-2 ">
+            <label>Year</label>
+            <select (change)="getSelectedYear($event)" name="select" class="form-control form-control-inverse" #selectYear>
+              <option *ngFor="let year of year" [selected]="year === currYear" [value]="year">
+                {{year}}
+
+              </option>
+            </select>
+          </div>
+
+
+          <div class="col-sm-3 ">
+
+            <label style="visibility: hidden;">sfsdf</label>
+
+            <!-- <button  style="margin-top: 2px" type="button" (click)="getProposalByCustomerId()"  class="btn btn-info "><i style="font-size: 20px" class="fa fa-search"></i></button> -->
+            <button type="button" (click)="getProposalByCustomerId()" class="btn btn-grd-success btn-block">Make Proposal</button>
+          </div>
+
+          <div class="col-sm-2 "></div>
+
+          <!-- <div class="col-sm-4 " *ngIf="reportFound">
+                                    <label>ITR Type</label>
+                                    <select (change)="setSelectedItr($event)"  name="select" class="form-control form-control-inverse" #itrHashType>
+                                        <option *ngFor="let itr of itrType"  [value]="itr.itrId">
+                                            {{itr.itr}}
+
+                                         </option>
+                                    </select>
+
+                                </div>
+
+
+                            <div class="col-sm-3 " *ngIf="reportFound">
+
+                                    <label style="visibility: hidden;">sfsdf</label>
+                             <button  type="button" (click)="getProposalByCustomerId()"  class="btn btn-success btn-block">Make Proposal</button>
+
+                          </div> -->
+
+
+
+
+        </div>
+
+
+
+        <ng-container>
+          <hr>
+          <div class="row">
+            <div class="col-md-9 ">
+              <p *ngIf="unProcessedDocs" style="color:red;font-weight: bold">Currently, there are invoices under process, do you want to review them?</p>
+            </div>
+
+            <div class="col-md-3">
+              <p>
+                <input type="checkbox" (change)="changeNillType($event.target.checked)">&emsp;
+                <strong>Nil File</strong>
+              </p>
+            </div>
+          </div>
+
+          <div *ngFor="let report of finalReports">
+
+
+            <div class="row">
+              <div class="col-md-12 ">
+
+
+
+
+
+                <ng-container>
+                  <form class="form-horizontal" #editForm="ngForm" (ngSubmit)="makeFinalproposalByITR(editForm)" novalidate>
+                    <div class="row ">
+                      <div class="col-md-12 col-xl-12">
+                        <h4>
+                          <span class="text-c-yellow"> GST SUMMERY</span>
+                        </h4>
+                        <div class="table-responsive">
+                          <table class="table table-hover">
+                            <thead>
+                              <tr>
+
+                                <th>PARTICULARS</th>
+                                <th>AMOUNT</th>
+                                <th style="width:15%">RM</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+
+                              <!-- <tr *ngIf="report.status!='NOSTATUS' && report.status!='COMPLETE';">
+                                  
+                                    <td> <p><input type="checkbox" (change)="changeNillType($event.target.checked)">&emsp;<strong>Nill File</strong></p> </td>
+                                    <td></td>
+                                    <td>
+                                       
+                                    </td>
+                                  </tr> -->
+
+                              <tr>
+                                <input type="hidden" [(ngModel)]="report.id" name="id">
+                                <td>Opening Balance of GST credit </td>
+                                <td>Rs. {{report.genGstOppningAmount}}</td>
+                                <td>
+                                  <input type="text" *ngIf="!inputDisabled" name="gstOppningAmount" [(ngModel)]="report.gstOppningAmount" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" name="gstOppningAmount" class="form-control ">
+                                </td>
+                              </tr>
+
+
+                              <tr>
+
+
+                                <td>Purchase During Month</td>
+                                <td>Rs. {{report.genPurchaseAmount}}</td>
+                                <td>
+                                  <input type="text" *ngIf="!inputDisabled" name="purchaseAmount" [(ngModel)]="report.purchaseAmount" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" name="purchaseAmount" class="form-control ">
+                                </td>
+                              </tr>
+                              <tr>
+
+                                <td>GST Credit on Purchase During Month</td>
+                                <td>Rs. {{report.genPurchaseGst}}</td>
+                                <td>
+                                  <input type="text" *ngIf="!inputDisabled" name="purchaseGst" [(ngModel)]="report.purchaseGst" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" name="purchaseGst" class="form-control ">
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>Sales During Month</td>
+                                <td>Rs. {{report.genSaleAmount}}</td>
+                                <td>
+                                  <input type="text" *ngIf="!inputDisabled" name="saleAmount" [(ngModel)]="report.saleAmount" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" name="saleAmount" class="form-control ">
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>GST Payable on Sales During Month</td>
+                                <td>Rs. {{report.genSaleGst}}</td>
+                                <td>
+                                  <input type="text" *ngIf="!inputDisabled" name="saleGst" [(ngModel)]="report.saleGst" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" name="saleGst" class="form-control ">
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>Penalty </td>
+                                <td>Rs. {{report.genPenaltyAmount}}</td>
+                                <td>
+                                  <input type="text" *ngIf="!inputDisabled" name="penaltyAmount" [(ngModel)]="report.penaltyAmount" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" name="penaltyAmount" class="form-control ">
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <th>TOTAL TAX PAYABLE </th>
+                                <th>Rs. {{report.genTotalAmount}}</th>
+                                <th>
+                                  <input type="text" *ngIf="!inputDisabled" name="totalAmount" [(ngModel)]="report.totalAmount" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" name="totalAmount" class="form-control ">
+                                </th>
+                              </tr>
+
+                              <tr>
+
+                                <td>Closing Balance</td>
+                                <td>Rs. 0</td>
+                                <td>
+                                  <input type="text" *ngIf="!inputDisabled" class="form-control ">
+                                  <input type="text" *ngIf="inputDisabled" [disabled]="inputDisabled" value="0" class="form-control ">
+                                </td>
+                              </tr>
+
+                            </tbody>
+                          </table>
+
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 col-xl-12" *ngIf="report.status!='NOSTATUS' && report.status!='COMPLETE'; else completeReportTemplate">
+                        <div class="form-group row">
+                          <div class="col-md-6 "></div>
+                          <div class="col-md-3 ">
+                            <button style="width:100%;" type="button" (click)="viewReportDetails(report,content)" class="btn btn-danger">View Detail</button>
+                          </div>
+                          <div class="col-md-3 ">
+                            <button style="width:100%;" type="submit" [disabled]="editForm.invalid" class="btn btn-primary">Submit</button>
+                          </div>
+                        </div>
+                      </div>
+                      <ng-template #completeReportTemplate>
+                        <div class="col-md-12 col-xl-12" *ngIf="report.status=='COMPLETE'">
+                          <div class="form-group row">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6 ">
+                              <button type="button" (click)="viewReportDetails(report,content)" class="btn btn-danger btn-block">View Detail</button>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </form>
+
+
+
+                </ng-container>
+
+
+              </div>
+
+            </div>
+          </div>
+        </ng-container>
+
+
+        <!--                             
+                            <hr>
+                            <br>
+
+                            <ng-container *ngIf="dummyReport!=null && dummyReport.length>0">
+                                    <div class="row ">
+                                    <div class="col-md-12 col-xl-12">
+                                        <h4><span class="text-c-yellow"> GST SUMMERY</span></h4>
+                                      <div  class="table-responsive">
+                                            <table  class="table table-hover">
+                                              <thead >
+                                              <tr >
+
+                                                <th >PARTICULARS</th>
+                                                <th >AMOUNT</th>
+
+                                              </tr>
+                                              </thead>
+                                              <tbody >
+                                              <tr >
+
+                                                <td >Opening Balance of GST credit </td>
+                                                <td >Rs. 00</td>
+
+                                              </tr>
+                                              <tr >
+
+
+                                                <td >Purchase During Month</td>
+                                                <td >Rs. 00</td>
+
+                                              </tr>
+                                              <tr >
+
+                                                <td >GST Credit on Purchase During Month</td>
+                                                <td >Rs. 00</td>
+
+                                               </tr>
+
+                                               <tr >
+                                              <td >Sales During Month</td>
+                                              <td >Rs. 00</td>
+
+                                              </tr>
+
+                                              <tr>
+                                              <td >GST Payable on Sales During Month</td>
+                                              <td >Rs. 00</td>
+
+                                              </tr>
+
+                                              <tr>
+                                              <td >Penalty </td>
+                                              <td >Rs. 00</td>
+
+                                              </tr>
+
+                                              <tr>
+                                              <th >TOTAL TAX PAYABLE  </th>
+                                              <th >Rs. 00</th>
+
+                                              </tr>
+
+                                              </tbody>
+                                            </table>
+
+                                          </div>
+                                      </div>
+
+
+                                  </div>
+
+
+                            </ng-container> -->
+
+
+
+      </div>
+
+
+      <ng2-toasty [position]="position"></ng2-toasty>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+
+  <div class="modal-body">
+    <ngb-tabset>
+      <ngb-tab title="Processed">
+
+        <ng-template ngbTabContent>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Invoice Type</th>
+                  <!-- <th>IGST %</th> -->
+                  <th>Company</th>
+                  <th>GSTIN</th>
+                  <!-- <th>CGST %</th> -->
+                  <th>Taxable value</th>
+                  <!-- <th>SGST %</th> -->
+                  <th>Nature</th>
+                  <th>GST(Total)</th>
+
+                  <th>Invoice Date</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let pList of processList | paginate: { itemsPerPage: 5, currentPage: p }">
+                  <td>{{ pList.type }}</td>
+                  <!-- <td>{{ pList.invoiceId }}</td> -->
+
+                  <td>{{ pList.company }}</td>
+                  <td>{{ pList.gstIn }}</td>
+                  <!-- <td>{{ pList.invoiceId }}</td> -->
+                  <td>{{ pList.taxableValue }}</td>
+                  <!-- <td>{{ pList.invoiceId }}</td> -->
+                  <td>{{ pList.nature }}</td>
+                  <td>{{ pList.cgstTotal + pList.igstTotal + pList.sgstTotal }}</td>
+
+                  <td>{{ pList.invoiceDate }}</td>
+
+                </tr>
+
+              </tbody>
+            </table>
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
+        </ng-template>
+
+      </ngb-tab>
+
+      <!-- /////////////second tab////////////////// -->
+
+      <ngb-tab title="Unprocessed">
+
+
+        <ng-template ngbTabContent>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <!-- <th>Sno. </th> -->
+                  <th>GSTIN</th>
+
+                  <th>GST Scheme</th>
+
+                  <th>Invoice</th>
+
+                  <th>Upload Date</th>
+                  <th>Status</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <!-- <tr *ngFor="let upList of unProcessList; let i=index "> -->
+                <tr *ngFor="let upList of unProcessList | paginate: { itemsPerPage: 5, currentPage: p }">
+                  <!-- <td>{{i+1}}</td> -->
+                  <td>{{upList.gstIn}}</td>
+                  <td>{{upList.scheme}}</td>
+                  <td>
+                    <img class="img-radius" style="width: 100px;height: 30px;" src="{{backendUrl}}{{upList.documentPath}}" alt="Not available"> </td>
+                  <td>{{upList.createTime}}</td>
+                  <ng-container *ngIf="upList.status=='ADDED'; else elseTemplate">
+                    <td style="color: green">{{upList.status}}</td>
+
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <td style="color: red;">{{upList.status}}</td>
+
+                  </ng-template>
+
+
+
+                </tr>
+
+
+              </tbody>
+            </table>
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
+        </ng-template>
+
+      </ngb-tab>
+
+    </ngb-tabset>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

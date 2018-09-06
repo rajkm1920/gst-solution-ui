@@ -1,0 +1,109 @@
+<div class="row">
+  <!-- Statistics card start -->
+  
+
+
+  <div class="col-md-12 col-xl-6" *ngFor="let plan of plans" >
+    
+    <div  class="card widget-statstic-card" *ngIf="plan.planType=='NORMAL' ; else compositeBlock" style="background-color:#39ADB5">
+      <div class="card-header">
+        <div class="card-header-left">
+          <h4 style="color:white">{{plan.planTitle}} </h4>
+              <ng-container *ngIf="plan.offerTitle!=null;">
+                <h5 style="color:darkgreen" >** {{plan.offerTitle}} </h5>
+              </ng-container>
+          
+          <p class="p-t-10 m-b-0 text-c-blue" style="color:white">{{plan.description}}  &nbsp; <i style="color:white"></i></p>
+        </div>
+      </div>
+      <div class="card-block">
+          <i class="icofont icofont-users-social st-icon bg-c-pink txt-lite-color"></i>
+
+        <div class="text-left">
+          <p class="p-t-10 m-b-0 text-c-black" style="color:white">
+            No of Invoice to be Processed :{{plan.monthlyInvoice}} <br>
+            GST Return File Fee Monthly Mode : Rs. {{plan.monthlyAmt}} <br>
+            Annual Package (All Monthly & Annual GST Retun) : Rs {{plan.annuallyAmt}}
+            <br>
+            Halfyearly Package (All Monthly & Annual GST Retun) : Rs {{plan.halfYearlyAmt}}
+          </p>
+        </div><br>
+        <div class="text-left" style="color:white">
+          <h3 class="d-inline-block" >Rs. {{plan.annuallyAmt}} </h3> Annual Plan
+          <!-- <a href="/customer-buyPlans" class="btn btn-primary btn-round btn-sm  f-right">Buy Plan</a> -->
+          <button type="button" class="btn btn-primary btn-round btn-sm f-right" (click)="buyplanClick(plan);">Buy Plan</button>
+        </div>
+
+      </div>
+    </div>
+
+  <ng-template #compositeBlock>
+    <div class="card widget-statstic-card"  style="background-color:rgb(241, 194, 38)">
+        <div class="card-header">
+          <div class="card-header-left">
+            <h4>{{plan.planTitle}} </h4>
+            <ng-container *ngIf="plan.offerTitle!=null;">
+              <h5 style="color:darkgreen" >** {{plan.offerTitle}} </h5>
+            </ng-container>
+        
+            <p class="p-t-10 m-b-0 text-c-blue" style="color:black;">All quarterly & Annual GST Return &nbsp; <i style="color:black;">(Composition Scheme)</i></p>
+          </div>
+        </div>
+        <div class="card-block" >
+            <i class="icofont icofont-users-social st-icon bg-c-pink txt-lite-color"></i>
+          <div class="text-left">
+              <p class="p-t-10 m-b-0 text-c-black">
+                  No of Invoice to be Processed per Quarterly :{{plan.monthlyInvoice}} <br>
+                  GST Return Filling Fee Quarterly Mode : Rs. {{plan.quarterlyAmt}} <br>
+                  Annual Package (All Quartrly & Annual GST Retun) : Rs {{plan.annuallyAmt}}<br>
+                  <br>
+    
+              </p>
+            </div><br>
+          <div class="text-left">
+            
+            <h3 class="d-inline-block">Rs. {{plan.annuallyAmt}}</h3> Offer Plan
+              
+            <button type="button" class="btn btn-primary btn-round btn-sm f-right" (click)="buyplanClick(plan);">Buy Plan</button>
+          </div>
+    
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+
+
+  <!-- Statistics card end -->
+<!-- Statistics card start -->
+
+
+ 
+
+<!-- Statistics card end -->
+
+
+<!-- Statistics card end -->
+<div class="col-md-12 col-xl-12">
+    <div class="card widget-statstic-card">
+      <div class="card-header">
+         <div class="card-header-left">
+          <h4>NOTE </h4>
+          <p class="p-t-10 m-b-0 text-c-blue">Terms & Conditions for every plan</p>
+        </div> 
+      </div>
+      <div class="card-block">
+        <!-- <i class="icofont icofont-presentation-alt st-icon bg-c-blue"></i> -->
+
+        <div class="text-left">
+          <h5 class="d-inline-block">
+            {{planNoteVar}}
+          </h5>
+         
+        </div>
+       
+
+      </div>
+    </div>
+  </div>
+

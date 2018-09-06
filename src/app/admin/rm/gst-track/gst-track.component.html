@@ -1,0 +1,128 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="md-tabs">
+      <ngb-tabset>   
+        <ngb-tab title="GST Track">
+          <ng-template ngbTabContent>
+            <div [@fadeInOutTranslate] class="m-t-15">
+              
+
+                
+                 
+                  <!-- Basic table card start -->
+    <app-card [title]="'Gst Track'" [classHeader]="true" [blockClass]="'table-border-style'">
+        
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+            <tr>
+              <th>Customer Id</th>
+              <th>Customer Name</th>
+              <th>Bussiness Name</th>
+              <th>GSTIN No</th>
+              <th>Agent Name</th>
+              <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Bigbazar</td>
+              <td>GISTN12333</td>
+              <td>Agent Test</td>
+              <td>23-Aug-2018</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Mark One</td>
+              <td>SRS</td>
+              <td>GISTN14333</td>
+              <td>Agent Test2</td>
+              <td>25-Aug-2018</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </app-card>       
+                      
+            
+            </div>
+          </ng-template>
+        </ngb-tab>
+        
+        <ngb-tab title="Gst Cut-off Date">
+          <ng-template ngbTabContent>
+            <div [@fadeInOutTranslate] class="m-t-15">
+              
+            
+               
+            
+
+              
+                    <!-- Basic table card start -->
+    <app-card [title]="'Cutt Of Date'" [classHeader]="true" [blockClass]="'table-border-style'">
+      <div class="container" style="margin-bottom: 5%">
+        
+          <div class="row">
+            <div class="col-md-3">
+                <label> Select Plan</label>
+                <select (change)="getPlanTypeMonth($event)" class="form-control" #planScheme>
+                    <option value=""> Select Scheme</option>
+                    <option value="NORMAL"> Normal</option>
+                    <option value="COMPOSIT">Composit</option>
+                  </select>
+            </div>
+          
+            <div class="col-md-3">
+                <label> Month</label>
+                <select *ngIf="monthArray.length==0" class="form-control">
+                    <option></option>
+                    
+                  </select>
+                <select (change)="setDatePicker($event)" *ngIf="monthArray.length>0" class="form-control">
+                    <option [value]=""> Select Month</option>
+                    <option [value]="month.monthNo" *ngFor="let month of monthArray" [selected]="currYear==month.monthNo" >
+                      {{month.month}}</option>
+                    
+                  </select>
+            </div>
+            <div class="col-md-3">
+                <label>Select Date  </label>
+                <input class="form-control"
+                [(ngModel)]="myDate"
+                ng2-datetime-picker 
+                date-only="true" />
+
+             
+            </div>
+            <div class="col-md-3">
+                <br >  
+                <button type="button" style=" margin-top: 7px; " class="btn btn-primary"> Submit</button>
+                
+            </div>
+          
+          
+        
+        </div>
+      </div>
+      </app-card>  
+              
+    
+            </div>
+          </ng-template>
+        </ngb-tab>
+      
+      
+     
+      </ngb-tabset>
+
+    </div>
+  </div>
+</div>
+<ng-template #customDay let-date="date" let-currentMonth="currentMonth" let-selected="selected" let-disabled="disabled" let-focused="focused">
+  <span class="custom-day" [class.weekend]="isWeekend(date)" [class.focused]="focused"
+        [class.bg-primary]="selected" [class.hidden]="date.month !== currentMonth" [class.text-muted]="disabled">
+    {{ date.day }}
+  </span>
+</ng-template>

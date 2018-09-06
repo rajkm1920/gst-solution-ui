@@ -1,0 +1,106 @@
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row ">
+                <div class="col-md-12 col-xl-12">
+                    <h4><span class="text-c-yellow">Payments</span></h4>
+                    </div>
+                    </div>
+        <div class="table-responsive">
+            <table class="table table-hover ">
+              <thead>
+              <tr>
+                <th>TxnId</th>
+                <th>Customer name</th>
+                <!-- <th>IGST %</th> -->
+                <th>Amount</th>
+              
+                <th>Payment Date</th>
+                <th>Payment Mode</th>
+                <th>Status</th>
+                <th>Verify</th>
+                <th>View Detail</th>
+                
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let pList of paymentList  | paginate: { itemsPerPage: 5, currentPage: p } ;let i=index ">
+                <td><span style="font-size: 12px" class="badge badge-pill badge-warning">{{ pList.orderId}}</span></td>
+                <td>{{ pList.customerName }}</td>
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <td>{{ pList.amount }}</td>
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <td>{{ pList.paymentDate }}</td>
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <td>{{ pList.paymentMode }}</td>
+                
+                <td >{{ pList.status }}</td>
+               
+                <!-- <td><button *ngIf="pList.status!=VERIFIED" (click)="verifyPayment(pList)" class="btn btn-success  btn-icon"><i class="icofont icofont-check-alt"></i></button>
+                  <button *ngIf="pList.status==VERIFIED" disabled class="btn btn-success  btn-icon"><i class="icofont icofont-check-alt"></i></button> 
+                </td> -->
+                <td><button title="Verify" *ngIf="pList.status!=VERIFIED" (click)="verifyPayment(pList)" class="btn btn-success  btn-icon"><i class="icofont icofont-check"></i></button></td>
+                <td><button title="Verify" *ngIf="pList.status!=VERIFIED" (click)="viewItems(content,pList)" class="btn  btn-primary">View</button></td>
+               
+               
+
+              </tr>
+             
+              </tbody>
+            </table>
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
+     
+    </div>
+  </div>
+ 
+
+  <ng2-toasty [position]="position"></ng2-toasty>
+
+  <ng-template #content let-c="close" let-d="dismiss" >
+        <div class="modal-header">
+          <h4 class="modal-title">Transaction Id : <span style="color:maroon">{{modalTransactionId}}</span></h4>
+         
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Service Type</th>
+                <!-- <th>IGST %</th> -->
+                <th>Service Name</th>
+              
+                <th>Amount</th>
+               
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let pList of paymentItemList ;let i=index ">
+                <td scope="row" >{{i+1}}</td>
+                <td *ngIf="pList.gstPlanId!='' && pList.gstPlanId>0">Main Plan</td>
+                <td *ngIf="pList.gstPlanId=='' || pList.gstPlanId<=0">Other Service</td>
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <td *ngIf="pList.gstPlanId!='' && pList.gstPlanId>0">{{ pList.planType }} ({{ pList.scheme }})</td>
+                <td *ngIf="pList.gstPlanId=='' || pList.gstPlanId<=0">{{ pList.service }}</td>
+               
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                <td>{{ pList.amount }}</td>
+                <!-- <td>{{ pList.invoiceId }}</td> -->
+                
+
+              </tr>
+             
+              </tbody>
+            </table>
+            
+          </div>
+         
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+        </div>
+      </ng-template>
+  

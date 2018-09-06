@@ -1,0 +1,306 @@
+<div class="card">
+
+  <div class="card-header">
+    <h3 class="card-header-text">Track Your GST Status</h3>
+  </div>
+  <div class="card-body">
+
+    <div class="form-group row">
+      <div class="col-sm-3 ">
+        <h5> <label>Select GSTN</label></h5>
+        <select name="select" class="form-control form-control-inverse" #customerGstinId (change)="getPlanofGST(customerGstinId.value);">
+          <option value="0">Select GSTN</option>
+          <option *ngFor="let gstn of cust_gst; let i=index" value="{{gstn.gstId}}">
+            {{gstn.gstin}}
+          </option>
+        </select>
+      </div>
+      <div class="col-sm-3 ">
+        <h5> <label>Select Scheme</label></h5>
+        <select name="select" class="form-control form-control-inverse" #schemeType>
+          <ng-container *ngIf="customerGstinId.value!='0'; else elseoption">
+            <option *ngFor="let scheme of plan " value="{{scheme.gstPlanId}}">{{scheme.planType}}</option>
+          </ng-container>
+          <ng-template #elseoption>
+            <option value="0">No plan for GSTN </option>
+          </ng-template>
+
+        </select>
+      </div>
+      <div class="col-sm-2 ">
+        <h5><label>Select Month</label></h5>
+        <select name="select" class="form-control form-control-inverse" #monthselected>
+          <option [value]="month.monthNo" [selected]="month.monthNo == currMonth" *ngFor="let month of monthArray ">
+            {{month.month}}</option>
+        </select>
+      </div>
+      <div class="col-sm-2 ">
+        <h5><label>Select Year</label></h5>
+        <select name="select" class="form-control form-control-inverse" #yearselected>
+          <option [value]="year.year" [selected]="year.year == currYear" *ngFor="let year of yearArray">
+            {{year.year}}</option>
+        </select>
+      </div>
+      <ng-container *ngIf="customerGstinId.value!=0 && schemeType.value!=0 ; else elseSchemeTemplate">
+        <div class="col-sm-2" style="margin-top: 5px;">
+          <h5><label>Search Report</label></h5>
+          <button type="button" class="btn btn-mat btn-inverse f-left" (click)="fetchreportsforTrackStatus(customerGstinId.value,schemeType.value
+                      ,monthselected.value,yearselected.value);">Search
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #elseSchemeTemplate>
+        <div class="col-sm-2" style="margin-top: 5px;">
+          <h5><label>Search Report</label></h5>
+          <button type="button" disabled class="btn btn-mat btn-default f-left">Search </button>
+        </div>
+      </ng-template>
+    </div>
+    <hr><br>
+
+    <ng-container *ngIf="status_report!=undefined  && btnClicked==true;">
+      <ng-container *ngIf=" status_report.length>0 && status_report[0].status!='INPROCESS' ; else underProcessList">
+        <div class="row ">
+          <div class="col-md-12 col-xl-12">
+            <h4><span class="text-c-yellow"> GST SUMMERY</span></h4>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+
+                    <th>PARTICULARS</th>
+                    <th>AMOUNT</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+
+                    <td>Opening Balance of GST credit </td>
+                    <td>Rs. {{status_report[0].gstOppningAmount}} </td>
+
+                  </tr>
+                  <tr>
+
+
+                    <td>Purchase During Month</td>
+                    <td>Rs. {{status_report[0].purchaseAmount}}</td>
+                  </tr>
+                  <tr>
+
+                    <td>GST Credit on Purchase During Month</td>
+                    <td>Rs. {{status_report[0].purchaseGst}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>Sales During Month</td>
+                    <td>Rs. {{status_report[0].saleAmount}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>GST Payable on Sales During Month</td>
+                    <td>Rs. {{status_report[0].saleGst}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>Interest </td>
+                    <td>Rs. 000</td>
+                  </tr>
+
+                  <tr>
+                    <td>Penalty </td>
+                    <td>Rs. {{status_report[0].penaltyAmount}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>Closing Balance of GST </td>
+                    <td>Rs.
+                      <!--  {{status_report[0].purchaseGst}} -->
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>TOTAL TAX PAYABLE </th>
+                    <th>Rs. {{status_report[0].totalAmount}}</th>
+                  </tr>
+
+                </tbody>
+              </table>
+              <p><Label><b>Paid Amount : </b></Label> <span style="margin-left: 3em;">Rs.
+                  {{status_report[0].paidAomunt}}</span></p>
+
+              <p><Label><b>Due Amount : </b></Label><span style="margin-left: 3em;">Rs. {{status_report[0].dueAmount}}</span></p>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-xl-12">
+            <div class="form-group row">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-6" style="text-align: center">
+                <button type="button" class="btn btn-mat btn-danger" value=""> PAY DUE AMOUNT </button>
+              </div>
+              <div class="col-sm-3"></div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #underProcessList>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="md-tabs">
+
+
+              <ngb-tabset>
+                <ngb-tab title="">
+                  <ng-template ngbTabTitle>
+                    <div (click)="unProcessInvoiceList(customerGstinId.value,schemeType.value
+                                  ,monthselected.value,yearselected.value)">Under
+                      Process Invoices</div>
+
+                  </ng-template>
+                  <ng-template ngbTabContent>
+                    <div [@fadeInOutTranslate] class="m-t-15">
+
+                      <!-- Basic table card start -->
+                      <app-card [title]="'Under Process Invoices'" [classHeader]="true" [blockClass]="'table-border-style'">
+
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <!-- <th>Sno. </th> -->
+                                <th>Document Id</th>
+                                <th>Image</th>
+                                <th>Creation Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <!-- <tr *ngFor="let upList of unProcessList; let i=index "> -->
+                              <tr *ngFor="let upList of unProcessList | paginate: { itemsPerPage: 5, currentPage: p }">
+                                <!-- <td>{{i+1}}</td> -->
+                                <td>{{upList.documentId}}</td>
+                                <td><img class="img-radius" style="width: 100px;height: 30px;" src="{{backendUrl}}{{upList.documentPath}}"
+                                    alt="Not available"> </td>
+                                <td>{{upList.createTime}}</td>
+                                <ng-container *ngIf="upList.status=='ADDED'; else elseTemplate">
+                                  <td style="color: green">{{upList.status}}</td>
+                                  <td> <button class="btn btn-danger  btn-sm" style="width: 80px" (click)="removeInvoiceDocument(upList.documentId)">Remove</button></td>
+                                </ng-container>
+                                <ng-template #elseTemplate>
+                                  <td style="color: red;">{{upList.status}}</td>
+                                  <td> <button class="btn btn-default  btn-sm" style="width: 80px">Removed</button></td>
+                                </ng-template>
+
+
+
+                              </tr>
+
+
+                            </tbody>
+                          </table>
+                          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                        </div>
+
+                      </app-card>
+
+
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+
+                <ngb-tab>
+                  <ng-template ngbTabTitle>
+                    <div (click)="processInvoiceList(customerGstinId.value,schemeType.value
+                                  ,monthselected.value,yearselected.value)">Processed
+                      Invoices</div>
+                  </ng-template>
+                  <ng-template ngbTabContent>
+                    <div [@fadeInOutTranslate] class="m-t-15">
+
+                      <!-- Basic table card start -->
+                      <app-card [title]="'Processed Invoices'" [classHeader]="false" [blockClass]="'table-border-style'">
+
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>InvoiceId</th>
+                                <!-- <th>IGST %</th> -->
+                                <th>IGST Amount</th>
+                                <!-- <th>CGST %</th> -->
+                                <th>CGST Amount</th>
+                                <!-- <th>SGST %</th> -->
+                                <th>SGST Amount</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let pList of processList | paginate: { itemsPerPage: 5, currentPage: p }">
+                                <td>{{ pList.invoiceId }}</td>
+                                <!-- <td>{{ pList.invoiceId }}</td> -->
+                                <td>{{ pList.igstTotal }}</td>
+                                <!-- <td>{{ pList.invoiceId }}</td> -->
+                                <td>{{ pList.cgstTotal }}</td>
+                                <!-- <td>{{ pList.invoiceId }}</td> -->
+                                <td>{{ pList.sgstTotal }}</td>
+                                <td>{{ pList.taxableValue }}</td>
+                                <td style="color: green">{{ pList.status }}</td>
+                                <td>{{ pList.invoiceDate }}</td>
+                                <td>&nbsp;<button class="btn btn-success  btn-icon"><i class="icofont icofont-eye-alt"></i></button></td>
+                              </tr>
+
+                            </tbody>
+                          </table>
+                          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                        </div>
+                      </app-card>
+
+
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+
+              </ngb-tabset>
+
+            </div>
+          </div>
+        </div>
+
+
+
+      </ng-template>
+
+    </ng-container>
+    <ng-container *ngIf="customerGstinId.value==0 && schemeType.value==0 ;">
+      <div class="row ">
+        <div class="col-md-12 col-xl-12">
+          <h5><span class="text-c-danger f-center" style="color:green;"> Please Select GST Number and Scheme to view
+              Report </span></h5>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="customerGstinId.value!=0 && schemeType.value==0 ;">
+      <div class="row ">
+        <div class="col-md-12 col-xl-12">
+          <h5><span class="text-c-danger f-center" style="color: red;">
+              NO PLAN IS ACTIVE NOW ,
+              <br> Please Buy a Plan for given GST Number to Genrate Report </span></h5>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="btnClicked==false && customerGstinId.value!=0 && schemeType.value!=0;">
+      <div class="row ">
+        <div class="col-md-12 col-xl-12">
+          <h5><span class="text-c-danger f-center" style="color:blue;"> Please Click on Search button to view Report of
+              selected criteria </span></h5>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

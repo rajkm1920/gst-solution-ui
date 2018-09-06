@@ -1,0 +1,202 @@
+<div class="card">
+<!-- <div class="card-header">
+  <h3 class="card-header-text">Track GST Reports</h3>
+</div> -->
+<div class="card-body">
+  <div class="row  icon-btn">
+      <div class="col-md- col-xl-12">
+          <form >
+                
+                  <div class="form-group row">
+                      <div class="col-sm-4 ">
+                          <h5><label>Select GST Number</label></h5>
+                          <select name="select" class="form-control form-control-inverse" #customerGstinId (change)="getPlanofGSTid(customerGstinId.value);">
+                            <option value="0">Select GSTN</option> 
+                            <option *ngFor="let gstn of cust_gstn" value="{{gstn.gstId}}">
+                                    {{gstn.gstin}} 
+                                </option>
+                          </select> 
+                      </div>
+
+                    <!-- <ng-container *ngIf="customerGstinId.value!='0';">  -->
+                      <div class="col-sm-4 ">
+                        <h5><label>Select Scheme</label></h5>
+                        <select name="select2" class="form-control form-control-inverse" #schemeType> 
+                        <ng-container *ngIf="customerGstinId.value!='0'; else elseoption" >
+                            <option  *ngFor="let scheme of plans " value="{{scheme.gstPlanId}}">{{scheme.planType}}</option>
+                        </ng-container>
+                        <ng-template #elseoption>
+                                <option value="0">No plan for GSTN </option>
+                        </ng-template>
+                        </select> 
+                    </div>
+                <!-- </ng-container> -->
+                   
+                      <div class="col-sm-4 " >
+                          <h5><label>Select Month</label></h5>
+                          <select name="select" class="form-control form-control-inverse" #month>
+                              <option value="0">Select Month</option>
+                              <option value="1">January</option>
+                              <option value="2">February</option>
+                              <option value='3'>March</option>
+                              <option value='4'>April</option>
+                              <option value='5'>May</option>
+                              <option value='6'>June</option>
+                              <option value='7'>July</option>
+                              <option value='8'>August</option>
+                              <option value='9'>September</option>
+                              <option value='10'>October</option>
+                              <option value='11'>November</option>
+                              <option value='12'>December</option>
+                          </select> 
+                         </div>
+                    
+                       
+                      </div>
+                 
+                <div class="form-group row " >
+                        <div class="col-sm-3"> </div>
+                        <div class="col-sm-6 text-center">
+                            <button type="button" class="btn btn-grd-info" 
+                            (click)="searchPramsCustomerReport(customerGstinId.value,month.value,schemeType.value,0);">Search</button>
+                        </div>
+                        <div class="col-sm-3"><input type="hidden" value="{{report_domain?.length}}" #lengthOFArray></div>
+                      
+                    </div>
+        </form>
+      </div>
+
+
+
+  </div>
+</div>
+</div>
+
+<ng-container *ngIf="lengthOFArray.value==0;">
+        <div class="card" >
+                <div class="card-body">
+                        <div class="row  icon-btn">
+                              <h5> <span style="color: red;margin-left: 5em;">Currently , No Data Found for selected GSTN and Scheme </span></h5>
+                        </div>
+                </div>
+        </div>
+</ng-container>
+
+
+<div class="card" *ngFor="let report of report_domain">
+        <div class="card-body">
+          
+                            <div class="row  icon-btn">
+                                       <div class="col-md-2 "> <b>Report ID</b><br>{{report.id}}</div>
+                                       <div class="col-md-2 "><b>Opening Balance</b><br>{{report.gstOppningAmount}}</div>
+                                       <div class="col-md-2 "><b>Purchase</b><br>{{report.purchaseAmount}}</div>
+                                       <div class="col-md-2 "><b>Purchase GST</b><br>{{report.purchaseGst}}</div>
+                                       <div class="col-md-2 "><b>Sale</b><br>{{report.saleAmount}}</div>
+                                       <div class="col-md-2 "><b>Sale GST</b><br>{{report.saleGst}}</div>
+                             </div><hr>
+                        <ng-container *ngIf="report.status=='INPROCESS'; else elseTemplate">
+                             <div class="row  icon-btn">
+                                       <div class="col-md-2 ">  <b>Penalty</b><br>{{report.penaltyAmount}}</div>
+                                       <div class="col-md-2 ">  <b>Total Tax Payable</b><br>{{report.totalAmount}}</div>
+                                       <div class="col-md-2 " style="color: red;"> <b>Status</b><br>{{report.status}}</div>
+                                       <div class="col-md-2 "><b>Filing Date</b><br>WIP</div>
+                                       <div class="col-md-2 "> <b>Filing Month</b><br>{{report.monthName}}-{{report.year}}</div>
+                                       <div class="col-md-2 "> <b>Action</b><br> <button  class="btn btn-warning  btn-icon" (click)="viewInprocessReport()"><i class="icofont icofont-eye-alt"></i></button></div>
+                            </div>
+                            </ng-container>
+                            <ng-template #elseTemplate> 
+                                <div class="row  icon-btn">
+                                       
+                                       <div class="col-md-2 ">  <b>Penalty</b><br>{{report.penaltyAmount}}</div>
+                                       <div class="col-md-2 ">  <b>Total Tax Payable</b><br>{{report.totalAmount}}</div>
+                                       <div class="col-md-2 " style="color: green;"> <b>Status</b><br>{{report.status}}</div>
+                                       <div class="col-md-2 "><b>Filing Date</b><br>{{report.updateTime}}</div>
+                                       <div class="col-md-2 "> <b>Filing Month</b><br>{{report.monthName}}-{{report.year}}</div>
+                                       <div class="col-md-2 "> <b>Action</b><br> <button  class="btn btn-warning  btn-icon" (click)="openLg(content,report.id)" ><i class="icofont icofont-eye-alt"></i></button>
+                                        <button class="btn btn-success  btn-icon"><i class="icofont icofont-download-alt"></i></button></div>
+                                </div>
+                            </ng-template>  
+        </div>
+</div>
+
+<ng-template #content  let-c="close" let-d="dismiss" >
+    <div class="modal-header">
+      <h4 class="modal-title">Return Proposal </h4>
+      <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+        <span aria-hidden="true" style="color: red;">&times;</span>
+      </button>
+    </div>
+    <div class=" row modal-body">
+     <div class="col-md-5" *ngFor="let proposal of report_Proposal" style="margin: 1px;">
+         <h5><label style="color: blue"><b>{{proposal.reportType}}</b></label></h5>
+         <table class=" table-bordered" >
+            <thead >
+                <tr >
+                  
+                  <th >PARTICULARS</th>
+                  <th >AMOUNT</th>
+                  
+                </tr>
+                </thead>
+                <tbody >
+                <tr >
+                  
+                  <td >Opening Balance of GST credit </td>
+                  <td >Rs. {{proposal.gstOppningAmount}} </td>
+                  
+                </tr>
+                <tr >
+                 
+                 
+                  <td >Purchase During Month</td>
+                  <td >Rs. {{proposal.purchaseAmount}}</td>
+                </tr>
+                <tr >
+                 
+                  <td >GST Credit on Purchase During Month</td>
+                  <td >Rs. {{proposal.purchaseGst}}</td>
+                 </tr>
+
+                 <tr >
+                <td >Sales During Month</td>
+                <td >Rs. {{proposal.saleAmount}}</td>
+                </tr>
+
+                <tr>
+                <td >GST Payable on Sales During Month</td>
+                <td >Rs. {{proposal.saleGst}}</td>
+                </tr>
+
+                <tr>
+                <td >Interest </td>
+                <td >Rs. 000</td>
+                </tr>
+
+                <tr>
+                <td >Penalty </td>
+                <td >Rs. {{proposal.penaltyAmount}}</td>
+                </tr>
+
+                <tr>
+                  <td >Closing Balance of GST </td>
+                  <td >Rs.<!--  {{status_report[0].purchaseGst}} --></td>
+                  </tr>
+
+                <tr>
+                <th >TOTAL TAX PAYABLE  </th>
+                <th >Rs. {{proposal.totalAmount}}</th>
+                </tr>
+
+                </tbody>
+              </table>
+     </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>
+
+
+
+ 

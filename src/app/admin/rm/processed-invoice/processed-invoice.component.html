@@ -1,0 +1,65 @@
+<div class="card">
+    <!-- <div class="card-header">
+      <h3 class="card-header-text">Track GST Reports</h3>
+    </div> -->
+    <div class="card-body">
+        <div class="row ">
+            <div class="col-md-12 col-xl-12">
+                <h4><span class="text-c-yellow">Processed Invoices</span></h4> 
+                </div>
+                </div>
+      <div class="row  icon-btn">
+          <div class="col-md- col-xl-12">
+              
+                    
+  
+                   <!-- next row///////////// -->
+                      <div class="form-group row">
+
+                          
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                  <th>Invoice Type</th>
+                                  <!-- <th>IGST %</th> -->
+                                  <th>Company</th>
+                                  <th>GST</th>
+                                  <!-- <th>CGST %</th> -->
+                                  <th>Taxable value</th>
+                                  <!-- <th>SGST %</th> -->
+                                  <th>Nature</th>
+                                  <th>GST(Total)</th>
+                                 
+                                  <th>Invoice Date</th>
+                                  <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let pList of processList | paginate: { itemsPerPage: 5, currentPage: p }">
+                                  <td>{{ pList.type }}</td>
+                                  <!-- <td>{{ pList.invoiceId }}</td> -->
+                                 
+                                    <td >{{ pList.company }}</td>
+                                    <td >{{ pList.gstIn }}</td>
+                                  <!-- <td>{{ pList.invoiceId }}</td> -->
+                                  <td>{{ pList.taxableValue }}</td>
+                                  <!-- <td>{{ pList.invoiceId }}</td> -->
+                                  <td>{{ pList.nature }}</td>
+                                  <td>{{ pList.cgstTotal + pList.igstTotal +  pList.sgstTotal }}</td>
+                                  
+                                  <td>{{ pList.invoiceDate }}</td>
+                                <td>&nbsp;<button (click)="viewProcessedDocuments(pList)" class="btn btn-primary">View</button></td>
+                              </tr>
+                             
+                              </tbody>
+                            </table>
+                            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                          </div>
+
+
+                        </div>
+  
+                    </div>
+                  </div>
+                  </div>         

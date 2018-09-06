@@ -1,0 +1,104 @@
+<div class="card" *ngFor="let report of invoiceList">
+    <div class="card-body">
+        <div class="row ">
+            <div class="col-md-12 col-xl-12">
+                <h4><span class="text-c-yellow">Invoice Detail</span></h4>
+                </div>
+                </div>
+              <!-- [clickToZoom]=false [scrollZoom]=false [windowPosition]=14  [imageZoom]="backendUrl+document.documentPath" -->
+                        <div class="row  table-responsive">
+                            <table class="table" >
+                               
+                                <tr >
+                                    <th  *ngIf="report.type=='SALES'" >Customer</th>
+                                    <th *ngIf="report.type!='SALES'" >Supplier</th>
+                                  <th>Invoice No</th>
+                                  <th>Type</th>
+                                  <!-- <td>IGST %</td> -->
+                                  <th>Nature Of Invoice</th>
+                                  <!-- <td>CGST %</td> -->
+                                  <th>Invoice Date</th>
+                                  <th>State</th>
+                                 
+                                </tr>
+                                <tr>
+                                    <td>{{report.name}}</td>
+                                  <td>{{report.invoiceNo}}</td>
+                                  <td>{{report.type}}</td>
+                                  <td>{{report.natureOfInvoice}}</td>
+                                  <td>{{report.invoiceDate}}</td>
+                                  <td>{{report.state}}</td>
+                                  
+
+                                </tr>
+
+                                <tr>
+                                   
+                                  <th>Nature</th>
+                                  <th>Invoice Value</th>
+                                  <th>Taxable Value</th>
+                                 
+                                  <th>IGST</th>
+                                  <th>CGST</th>
+                                  <th>SGST</th>
+                                </tr>
+                               
+
+                                <tr>
+                                    <td>{{report.nature}}</td>
+                                    <td>{{report.invoiceValue}}</td>
+                                    <td>{{report.taxableValue}}</td>
+                                    <td>{{report.igstTotal}}</td>
+                                    <td>{{report.cgstTotal}}</td>
+                                    <td>{{report.sgstTotal}}</td>
+  
+                                  </tr>
+
+                                </table>
+                              </div> 
+               
+    </div>
+</div>
+
+
+<div class="card" >
+    <div class="card-body ">
+        
+              <div class="row" *ngIf="invoiceDocumentList!=null && invoiceDocumentList!=undefined && invoiceDocumentList.length>0; else noDocTemplate">
+                  <div style="cursor: pointer;margin-bottom: 2%" *ngFor="let document of invoiceDocumentList;let i=index" class="col-md-4">
+                    <a title="Click to View" class="lightbox" (click)="zoomImageOnClick(content,document.documentPath)" ><img style="width: 100%;height: 250px" [src]="backendUrl+document.documentPath" >
+                       </a>
+                      
+                    </div>
+                   
+                    </div>
+                    <ng-template class="row" #noDocTemplate>
+                      
+                            <h5>no documents found</h5>
+
+                    </ng-template>
+
+                  
+    </div>
+
+   
+    </div>
+           
+    
+    <!-- <div class="lightbox-target" *ngIf="show">
+            <img [src]="imageSource"  >
+        <a class="lightbox-close" href="#"></a>
+       
+    </div> -->
+
+
+
+    <ng-template #content let-c="close" let-d="dismiss"  >
+        
+        <div class=" row modal-body">
+
+            <img style="width: 100%;height: 400px"  [src]="imageSource" alt="Not available">
+      
+          </div>
+                      
+          </ng-template>

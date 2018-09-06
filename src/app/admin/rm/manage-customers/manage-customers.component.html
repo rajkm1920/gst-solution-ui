@@ -1,0 +1,68 @@
+<div class="card">
+  <!-- <div class="card-header">
+      <h3 class="card-header-text">Track GST Reports</h3>
+    </div> -->
+  <div class="card-body">
+    <div class="row ">
+      <div class="col-md-12 col-xl-12">
+        <h4>
+          <span class="text-c-yellow">Customers</span>
+        </h4>
+      </div>
+    </div>
+    <div class="row  icon-btn">
+      <div class="col-md- col-xl-12">
+
+
+
+        <!-- next row///////////// -->
+        <div class="form-group row">
+
+          <div class="table-responsive">
+            <table class="table table-hover ">
+              <thead>
+                <tr>
+
+                  <th>User </th>
+                  <th>Email</th>
+                  <th>Contact</th>
+                  <th>Address</th>
+                  <!-- <th></th> -->
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cust of customerList  | paginate: { itemsPerPage: 5, currentPage: p }">
+
+                  <td *ngIf="cust.name=='' || cust.name==null">NOT AVAILABLE</td>
+                  <td *ngIf="cust.name!='' && cust.name!=null">{{cust.name}}</td>
+
+
+                  <td *ngIf="cust.email=='' || cust.email==null; else emailPro">NOT AVAILABLE</td>
+                  <ng-template #emailPro>
+                    <td *ngIf="cust.email!='' && cust.email!=null">{{cust.email}}</td>
+                  </ng-template>
+                  <td>{{cust.contact}}</td>
+                  <td *ngIf="cust.address=='' || cust.address==null; else AddressPro">NOT AVAILABLE</td>
+                  <ng-template #AddressPro>
+                    <td *ngIf="cust.address!='' && cust.address!=null">{{cust.address}}</td>
+                  </ng-template>
+
+                  <!-- <td><button type="button" (click)="editCustomer(cust)" title="Edit"  class="btn btn-outline-primary"><i class="fa fa-edit"></i></button></td> -->
+                  <td>
+                    <button type="button" (click)="makeProposalByCustomerId(cust.userId,cust.name)" class="btn btn-info"> Proposal</button>
+                  </td>
+                </tr>
+
+
+              </tbody>
+            </table>
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>

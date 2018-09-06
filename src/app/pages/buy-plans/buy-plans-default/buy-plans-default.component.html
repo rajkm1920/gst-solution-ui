@@ -1,0 +1,237 @@
+<div class="card">
+  <div class="card-header">
+    <h4>Buy Plan</h4>
+  </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 col-xl-6" >
+
+          <ng-container *ngIf="plans.planType=='NORMAL' ; else compositeBlock">
+          <div class="card widget-statstic-card" style="background-color:#39ADB5">
+              <div class="card-header">
+                  <div class="card-header-left">
+                    <h4 style="color:white">{{plans.planTitle}} </h4>
+                        <ng-container *ngIf="plans.offerTitle!=null;">
+                          <h5 style="color:darkgreen" >** {{plans.offerTitle}} </h5>
+                        </ng-container>
+
+                    <p class="p-t-10 m-b-0 text-c-blue" style="color:white">{{plans.description}}  &nbsp; <i style="color:white"></i></p>
+                  </div>
+                </div>
+                <div class="card-block">
+                    <i class="icofont icofont-users-social st-icon bg-c-pink txt-lite-color"></i>
+
+                  <div class="text-left">
+                    <p class="p-t-10 m-b-0 text-c-black" style="color:white">
+                      No of Invoice to be Processed :{{plans.monthlyInvoice}} <br>
+                      GST Return File Fee Monthly Mode : Rs. {{plans.monthlyAmt}} <br>
+                      Annual Package (All Monthly & Annual GST Retun) : Rs {{plans.annuallyAmt}}
+                      <br>
+                      Halfyearly Package (All Monthly & Annual GST Retun) : Rs {{plans.halfYearlyAmt}}
+                    </p>
+                  </div><br>
+                  <div class="text-left" style="color:white">
+                    <h3 class="d-inline-block" >Rs. {{plans.annuallyAmt}} </h3> Annual Plan
+                  </div>
+                </div>
+          </div>
+        </ng-container>
+
+        <ng-template #compositeBlock>
+            <div class="card widget-statstic-card"  style="background-color:rgb(241, 194, 38)">
+                <div class="card-header">
+                  <div class="card-header-left">
+                    <h4>{{plans.planTitle}} </h4>
+                    <ng-container *ngIf="plans.offerTitle!=null;">
+                      <h5 style="color:darkgreen" >** {{plans.offerTitle}} </h5>
+                    </ng-container>
+                    <p class="p-t-10 m-b-0 text-c-blue" style="color:black;">All quarterly & Annual GST Return &nbsp; <i style="color:black;">(Composition Scheme)</i></p>
+                  </div>
+                </div>
+                <div class="card-block" >
+                    <i class="icofont icofont-users-social st-icon bg-c-pink txt-lite-color"></i>
+                  <div class="text-left">
+                      <p class="p-t-10 m-b-0 text-c-black">
+                          No of Invoice to be Processed per Quarterly :{{plans.monthlyInvoice}} <br>
+                          GST Return Filling Fee Quarterly Mode : Rs. {{plans.quarterlyAmt}} <br>
+                          Annual Package (All Quartrly & Annual GST Retun) : Rs {{plans.annuallyAmt}}<br>
+                          <br>
+
+                      </p>
+                    </div><br>
+                  <div class="text-left">
+
+                    <h3 class="d-inline-block">Rs. {{plans.annuallyAmt}}</h3> Offer Plan
+                  </div>
+
+                </div>
+              </div>
+        </ng-template>
+
+
+        </div>
+
+        <div class="col-md-6 col-xl-6">
+
+            <form >
+                <div class="form-group row">
+
+
+                    <div class="col-sm-6 ">
+                        <h5> <label>Select Plan</label></h5>
+                        <select name="select" class="form-control form-control-inverse" #planMonth>
+                            <option value="0">Select Plan </option>
+                           <ng-container *ngIf="plans.planType=='NORMAL'; else elseTemplate1">
+                              <option value="1">Monthly </option>
+                              <option value="6">Half-Yearly</option>
+                           </ng-container>
+                           <ng-template #elseTemplate1>
+                              <option value="3">Quarterly </option>
+                           </ng-template>
+                           <option value="12">Annually</option>
+
+                        </select>
+                    </div>
+                    <div class="col-sm-6 ">
+                      <h5> <label>Select GSTN </label></h5>
+                      <select name="select" class="form-control form-control-inverse" #statusSelected>
+                          <option value="0">Select GSTN  </option>
+                          <option value="1">Apply New GST </option>
+                          <option value="2">Existing GST</option>
+                      </select>
+                  </div>
+
+                    <div class="col-sm-2">
+                      <input type="hidden" value="{{plans.planType}}" #getPlanType></div>
+                    </div>
+            <ng-container *ngIf="statusSelected.value=='1' && planMonth.value!='0'">
+            <div class="form-group row">
+                <div class="col-sm-6 ">
+                 <h5> <label> Legal Name</label></h5>
+                    <input type="text" class="form-control " placeholder="Enter Name" value="" #newLegalName>
+                   </div>
+            <div class="col-sm-6 ">
+                <h5><label> Business Legal Name</label></h5>
+             <input type="text" class="form-control " placeholder="Enter Business Name" value="" #newBusinessName>
+            </div>
+
+            </div>
+            <div class="form-group row">
+            <div class="col-sm-6 ">
+                <h5><label> Mobile Number</label></h5>
+                  <input type="number" class="form-control " placeholder="Enter Mobile" #newNumber>
+                 </div>
+                 <div class="col-sm-6 ">
+                    <h5><label> Email</label></h5>
+                      <input type="email" class="form-control " placeholder="Enter Email" #newemail>
+                     </div>
+                  <div class="col-sm-6 ">
+                    <h5><label> Business Type</label></h5>
+                      <input type="text" class="form-control " placeholder="Enter type of business" #newbusinessType>
+                      </div>
+                 <div class="col-sm-6 ">
+                    <h5> <label>State </label></h5>
+                       <select name="select" class="form-control " #stateId  #stateId (change)="fetchCetie(stateId.value)">
+                           <option *ngFor="let state of statesfatched" value="{{state.stateId}}" >{{state.state}}</option>
+                       </select>
+                      </div>
+               <div class="col-sm-6 ">
+                   <h5><label>City</label></h5>
+                <select name="select" class="form-control " #cityId placeholder="Enter District" >
+                   <option *ngFor="let city of cityfatched" value="{{city.cityId}}" >{{city.city}}</option>
+               </select>
+               </div>
+            </div>
+
+
+            <div class="form-group row text-center " >
+
+              <div class="col-sm-12 ">
+                    <button type="button" class="btn btn-grd-danger" (click)="buyplanwith_service(stateId.value,
+                    cityId.value,newNumber.value,newBusinessName.value,newLegalName.value
+                    ,planMonth.value,plans.planId,newemail.value,newbusinessType.value,
+                    getPlanType.value);" >Buy Plan </button>
+                </div>
+
+            </div>
+          </ng-container>
+          <ng-container *ngIf="statusSelected.value=='2' && planMonth.value!='0'">
+              <!--
+              oldcityId:number;
+              oldstateId:number; -->
+              <div class="form-group row">
+                  <div class="col-sm-6 ">
+                    <h5><label> GST Number</label></h5>
+                   <input type="text" list="gstnnumber" class="form-control"  placeholder="Enter GST" value="" #oldgst (change)="getGSTDetail(oldgst.value)">
+                   <datalist id="gstnnumber">
+                      <option value="{{gst.gstin}}" *ngFor="let gst of cust_gstn" >
+                    </datalist>
+                  </div>
+              <div class="col-sm-6 ">
+                  <h5><label> Mobile Number</label></h5>
+                    <input type="number" class="form-control " placeholder="Enter Mobile" value="{{oldnumber}}" #oldnumber>
+                   </div>
+            </div>
+
+            <div class="form-group row">
+                  <div class="col-sm-6 ">
+                   <h5> <label> Legal Name</label></h5>
+                      <input type="text" class="form-control " placeholder="Enter Name" value="{{oldname}}" #oldlegalName>
+                     </div>
+              <div class="col-sm-6 ">
+                  <h5><label> Business Legal Name</label></h5>
+               <input type="text" class="form-control " placeholder="Enter Business Name" value="{{oldbusinessname}}" #oldbusinessName>
+              </div>
+
+              </div>
+              <div class="form-group row">
+                  <div class="col-sm-6 ">
+                   <h5> <label> Email </label></h5>
+                      <input type="email" class="form-control " placeholder="Enter Email" value="{{oldemail}}" #oldEmail>
+                     </div>
+              <div class="col-sm-6 ">
+                  <h5><label> Business Type</label></h5>
+               <input type="text" class="form-control " placeholder="Enter Business Name" value="{{oldbusinesstype}}" #oldbusinessType>
+              </div>
+
+              </div>
+
+
+              <div class="form-group row text-center " >
+
+                <div class="col-sm-12 ">
+                      <button type="button" class="btn btn-grd-danger" (click)="buyplanwith_out_srevice(planMonth.value,oldbusinessType.value
+                      ,oldEmail.value,oldbusinessName.value,oldlegalName.value,oldnumber.value,oldgst.value
+                      ,plans.planId,getPlanType.value);" >Buy Plan</button>
+                  </div>
+
+              </div>
+            </ng-container>
+          <ng-container *ngIf="statusSelected.value=='0'; else plancheck">
+              <div class="form-group row text-center " >
+                  <div class="col-sm-12 ">
+                    <p style="color: red">Please Select your Status & Plan to buy  *</p>
+                    </div>
+
+                </div>
+            </ng-container>
+            <ng-template #plancheck>
+            <ng-container *ngIf="planMonth.value=='0'">
+                <div class="form-group row text-center " >
+                    <div class="col-sm-12 ">
+                      <p style="color: red">Please Select your Plan also  *</p>
+                      </div>
+
+                  </div>
+              </ng-container>
+            </ng-template>
+            </form>
+
+          </div>
+
+
+    </div>
+
+
+    </div>
+    </div>

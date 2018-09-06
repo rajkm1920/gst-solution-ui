@@ -1,0 +1,462 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="md-tabs">
+      <ngb-tabset>
+        <ngb-tab>
+            <ng-template ngbTabTitle>
+                <div (click)="refreshEmployees()">Employees</div>
+            </ng-template>
+          <ng-template ngbTabContent>
+            <div  class="m-t-15">
+
+              <div class="card">
+              <!-- Basic table card start -->
+              <app-card [title]="'All Employees'"  [blockClass]="'table-border-style'">
+
+                <div class="alert alert-success alert-dismissable" *ngIf="updateSuccess" style="text-align: center">
+                    <button type="button" class="close" data-dismiss="alert" (click)="hideAlert()">X</button>
+                  <strong style="font-size: large">{{message}}</strong>
+              </div>
+                  <div class="table-responsive" style="padding: 20px">
+                    <table class="table table-bordered">
+                      <thead>
+                      <tr>
+                        <!-- <th>Customer Id</th> -->
+                        <th>Employee Name</th>
+                        <th>Mobile Number</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                       <tr  *ngFor="let emp of userArray | paginate: { itemsPerPage: 5, currentPage: p }">
+                        <th scope="row">{{emp.name}}</th>
+                        <td>{{emp.contact}}</td>
+                        <td>{{emp.email}}</td>
+                        <td>{{emp.role}}</td>
+                        <td>{{emp.status}}</td>
+                        <td>
+                          <a  style="color: dodgerblue"  (click)="openModal(emp)"><fa name="pencil-square-o"></fa></a>&nbsp;
+                          <a  *ngIf="emp.status === 'ACTIVE' " style="color: red" (click)="changeEmployeeStatus(emp.userId,2)" ><fa name="times-circle-o"></fa></a>
+                          <a *ngIf="emp.status === 'INACTIVE' "  style="color: green" (click)="changeEmployeeStatus(emp.userId,1)" ><fa name="check-square-o"></fa></a>
+                        </td>
+                      </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                </app-card>
+                <div class="backdrop" [ngStyle]="{'display':display}"></div>
+
+                <div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+
+                  <div class="modal-dialog" role="document">
+
+                    <div class="modal-content">
+
+                      <div class="modal-header">
+                          <h4 style="text-align: center" class="modal-title">Edit Employee Details</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="onCloseHandled()"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <form class="form-horizontal" #editForm="ngForm" (ngSubmit)="editEmployee(editForm)" novalidate>
+                      <div class="modal-body">
+
+                        <div class="alert alert-danger alert-dismissable" *ngIf="updateError" style="text-align: center">
+                            <button type="button" class="close" data-dismiss="alert" (click)="hideAlert()">X</button>
+                          <strong style="font-size: large">{{response.message}}</strong>
+                      </div>
+
+                            <input type="hidden"  [(ngModel)] ="userId" name="userId" >
+                            <input type="hidden"  [(ngModel)] ="roleId" name="roleId" >
+                              <div class="row">
+                                <div class="form-group col-md-6">
+                                  <label class="control-label col-sm-6" for="email">Name:</label>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                  <div class="">
+                                    <input pattern="[a-zA-Z '-]*" type="text" class="form-control" minlength="3" maxlength="70"  id="name" placeholder="Enter name" name="name" value={{name}} required [(ngModel)]="name" #myName="ngModel">
+                                      <div *ngIf="myName.errors && (myName.dirty || myName.touched)" class="alert alert-danger">
+                                          <div [hidden]="!myName.errors.required">
+                                              Name is required
+                                          </div>
+                                          <div [hidden]="!myName.errors.minlength">
+                                              Name must be at least 3 characters long.
+                                          </div>
+                                          <div [hidden]="!myName.errors.maxlength">
+                                              Name cannot be more than 70 characters long.
+                                          </div>
+                                          <div [hidden]="!myName.errors.pattern">
+                                              Please enter valid name.
+                                          </div>
+                                      </div>
+                                  </div>
+                                </div>
+                                </div>
+                                <div class="row">
+                                <div class="form-group col-md-6">
+                                  <label class="control-label col-sm-6" for="email">Contact:</label>
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <div class="">
+                                    <input type="text" pattern="^((\\+91-?)|0)?[0-9]{10}$" class="form-control" maxlength="10" id="contact" readonly="readonly" placeholder="Enter contact" value="{{contact}}" name="contact" required [(ngModel)]="contact" #myContact="ngModel">
+                                    <div *ngIf="myContact.errors && (myContact.dirty || myContact.touched)" class="alert alert-danger">
+                                          <div [hidden]="!myContact.errors.required">
+                                              Contact is required
+                                          </div>
+                                          <div [hidden]="!myContact.errors.maxlength">
+                                              Contact cannot be more than 10 characters long.
+                                          </div>
+                                          <div [hidden]="!myContact.errors.pattern">
+                                              Please enter valid contact number.
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                </div>
+                                </div>
+                                <div class="row">
+                                  <div class="form-group col-md-6">
+                                    <label class="control-label col-sm-6" for="email">Email:</label>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <div class="">
+                                      <input type="email" pattern="^[a-z0-9._%+-]+@[a-z.-]+\.[a-z]{2,4}$" maxlength="70" class="form-control" id="email" placeholder="Enter email" value="{{email}}" name="email" required [(ngModel)]="email" #myEmail="ngModel">
+                                      <div *ngIf="myEmail.errors && (myEmail.dirty || myEmail.touched)" class="alert alert-danger">
+                                          <div [hidden]="!myEmail.errors.required">
+                                              Email is required
+                                          </div>
+                                          <div [hidden]="!myEmail.errors.maxlength">
+                                              Email cannot be more than 70 characters long.
+                                          </div>
+                                          <div [hidden]="!myEmail.errors.pattern">
+                                              Please enter valid email address.
+                                          </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- <div class="form-group col-md-6">
+                                    <label class="control-label col-sm-6" for="email">Employee Role:</label>
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <div class="">
+                                      <select class="form-control" name="roleId"  required [(ngModel)]="roleId" #myRoleid="ngModel">
+                                        <option value="3">RM</option>
+                                        <option value="2">Agent</option>
+                                      </select>
+                                      <div *ngIf="myRoleid.errors && (myRoleid.dirty || myRoleid.touched)" class="alert alert-danger">
+                                          <div [hidden]="!myRoleid.errors.required">
+                                              Role is required
+                                          </div>
+
+                                      </div>
+                                    </div>
+                                  </div> -->
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                      <label class="control-label col-sm-6" for="email">Address:</label>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                      <div class="">
+                                        <textarea class="form-control" id="address" placeholder="Enter address" name="address" [(ngModel)] = "address" ></textarea>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+
+                      </div>
+
+                      <div class="modal-footer">
+                          <div class="form-group">
+                              <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-info" [disabled]="editForm.invalid">Submit</button>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="button" class="btn btn-default" (click)="onCloseHandled()" >Close</button>
+                                </div>
+                              </div>
+
+
+                      </div>
+                      </form>
+                    </div><!-- /.modal-content -->
+
+                  </div><!-- /.modal-dialog -->
+
+                </div><!-- /.modal !-->
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+
+        <ngb-tab title="">
+            <ng-template ngbTabTitle>
+                <div (click)="refreshAddEmployees()">Add Employee</div>
+            </ng-template>
+          <ng-template ngbTabContent>
+            <div  class="m-t-15">
+                    <!-- Basic table card start -->
+            <app-card [title]="'Add Employee'" [classHeader]="false" [blockClass]="'table-border-style'" >
+
+              <div class="container">
+
+                <form class="form-horizontal" [formGroup]="profileForm" (ngSubmit)="addEmployee()" novalidate>
+                  <div class="row">
+                    <div class="form-group col-md-6">
+                      <label class="control-label col-sm-6" for="email">Name:</label>
+                      <div class="col-sm-10 ">
+                        <input pattern="[a-zA-Z '-]*" type="text" class="form-control" minlength="3" maxlength="70"  id="name" placeholder="Enter name" formControlName="name" >
+                          <!-- <div *ngIf="myName.errors && (myName.dirty || myName.touched)" class="alert alert-danger">
+                              <div [hidden]="!myName.errors.required">
+                                  Name is required
+                              </div>
+                              <div [hidden]="!myName.errors.minlength">
+                                  Name must be at least 3 characters long.
+                              </div>
+                              <div [hidden]="!myName.errors.maxlength">
+                                  Name cannot be more than 70 characters long.
+                              </div>
+                              <div [hidden]="!myName.errors.pattern">
+                                  Please enter valid name.
+                              </div>
+                          </div> -->
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label class="control-label col-sm-6" for="email">Contact:</label>
+                      <div class="col-sm-10">
+                        <input type="text" pattern="^((\\+91-?)|0)?[0-9]{10}$" class="form-control" maxlength="10" id="contact" placeholder="Enter contact" formControlName="contact" >
+                        <!-- <div *ngIf="myContact.errors && (myContact.dirty || myContact.touched)" class="alert alert-danger">
+                              <div [hidden]="!myContact.errors.required">
+                                  Contact is required
+                              </div>
+                              <div [hidden]="!myContact.errors.maxlength">
+                                  Contact cannot be more than 10 characters long.
+                              </div>
+                              <div [hidden]="!myContact.errors.pattern">
+                                  Please enter valid contact number.
+                              </div>
+                          </div> -->
+                      </div>
+
+                    </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-6">
+                        <label class="control-label col-sm-6" for="email">Email:</label>
+                        <div class="col-sm-10">
+                          <input type="email" pattern="^[a-z0-9._%+-]+@[a-z.-]+\.[a-z]{2,4}$" maxlength="70" class="form-control" id="email" placeholder="Enter email" formControlName="email"  >
+                          <!-- <div *ngIf="myEmail.errors && (myEmail.dirty || myEmail.touched)" class="alert alert-danger">
+                              <div [hidden]="!myEmail.errors.required">
+                                  Email is required
+                              </div>
+                              <div [hidden]="!myEmail.errors.maxlength">
+                                  Email cannot be more than 70 characters long.
+                              </div>
+                              <div [hidden]="!myEmail.errors.pattern">
+                                  Please enter valid email address.
+                              </div>
+                          </div> -->
+                        </div>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label class="control-label col-sm-6" for="email">Employee Role:</label>
+                        <div class="col-sm-10">
+                          <select class="form-control" formControlName="roleId" required >
+                              <option  value="">Select </option>
+                            <option value="3">RM</option>
+                            <option value="2">Agent</option>
+                          </select>
+                           <!-- <div *ngIf="myRoleid.errors && (myRoleid.dirty || myRoleid.touched)" class="alert alert-danger">
+                              <div [hidden]="!myRoleid.errors.required">
+                                  Role is required
+                              </div>
+
+                          </div> -->
+                        </div>
+                      </div>
+                     </div>
+                     <div class="row">
+                        <div class="form-group col-md-6">
+                          <label class="control-label col-sm-6" for="email">Address:</label>
+                          <div class="col-sm-10">
+                            <textarea class="form-control" id="address" placeholder="Enter address" formControlName="address" ></textarea>
+                          </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label style="visibility: hidden" class="control-label col-sm-6" for="email">Address:</label>
+                            <div class="col-sm-10" >
+                                <button type="submit" class="btn btn-info" >Submit</button>
+                            </div>
+                          </div>
+                       </div>
+                  <!-- <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-info" [disabled]="myForm.invalid">Submit</button>
+                    </div>
+                  </div> -->
+                </form>
+              </div>
+              </app-card>
+
+
+            </div>
+          </ng-template>
+
+        </ngb-tab>
+
+        <ngb-tab title="">
+            <ng-template ngbTabTitle>
+                <div (click)="refreshUnMapppedCustomers()">Map Customers</div>
+            </ng-template>
+          <ng-template ngbTabContent>
+            <div  class="m-t-15">
+
+              <div class="card">
+              <!-- Basic table card start -->
+              <app-card [title]="'Map Customers'"  [blockClass]="'table-border-style'">
+                  <div class="alert alert-danger alert-dismissable" *ngIf="customerRequired" style="text-align: center">
+                      <button type="button" class="close" data-dismiss="alert" (click)="hideAlert()">X</button>
+                    <strong style="font-size: large">Please select atleast 1 customer</strong>
+                </div>
+                <div class="alert alert-success alert-dismissable" *ngIf="updateSuccess" style="text-align: center">
+                    <button type="button" class="close" data-dismiss="alert" (click)="hideAlert()">X</button>
+                  <strong style="font-size: large">{{message}}</strong>
+              </div>
+              <form class="form-horizontal" #myMapCustomersForm="ngForm" (ngSubmit)="mapCustomers(myMapCustomersForm)" novalidate>
+
+
+                <div class="col-md-6">
+                  <label class="control-label col-sm-6" for="email">Select RM </label>
+                  <div class="col-sm-12">
+                    <select class="form-control" required name="userId" [(ngModel)]="userId" #myUserid="ngModel">
+                      <option value="">Select</option>
+                      <option *ngFor="let rm of rmArray" [value]=rm.userId>
+                        {{rm.name}}
+                      </option>
+                    </select>
+                    <div *ngIf="myUserid.errors && (myUserid.dirty || myUserid.touched)" class="alert alert-danger">
+                        <div [hidden]="!myUserid.errors.required">
+                            RM is required
+                        </div>
+
+                    </div>
+                  </div>
+                </div>
+                  <div class="table-responsive" style="padding: 20px">
+                    <table class="table table-bordered">
+                      <thead>
+                      <tr>
+                        <th>Select</th>
+                        <th>Customer Name</th>
+                        <th>Mobile Number</th>
+                        <th>Email</th>
+                        <th>Registration Date</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                          <ng-container *ngIf="unmappedCustomerArray.length > 0; else elseTemplate">
+                              <tr  *ngFor="let c of unmappedCustomerArray | paginate: { itemsPerPage: 5, currentPage: p }">
+                                  <td><input type="checkbox" id  value="{{c.userId}}" name="customerIdArray" (change)="onChange(c.userId, $event.target.checked)"></td>
+                                  <td>{{c.name}}</td>
+                                  <td>{{c.contact}}</td>
+                                  <td>{{c.email}}</td>
+                                  <td>{{c.creationTime}}</td>
+                                </tr>
+                          </ng-container>
+                          <ng-template #elseTemplate>
+                            <tr><td colspan="5" style="text-align: center;color: red">It seems all <strong>Customers</strong> are mapped.</td></tr>
+                          </ng-template>
+
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="form-group" style="float: right;">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-info" >Submit</button>
+                      </div>
+                    </div>
+                  </form>
+                </app-card>
+                <pagination-controls (pageChange)="p = $event"></pagination-controls>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+
+
+        <ngb-tab title="">
+            <ng-template ngbTabTitle>
+                <div (click)="refreshMapppedCustomers()">View Mapped Customers</div>
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div  class="m-t-15">
+
+                <div class="card">
+                <!-- Basic table card start -->
+                <app-card [title]="'View Mapped Customers'"  [blockClass]="'table-border-style'">
+
+                  <!-- <div class="col-md-6"></div>
+                  <div class="col-md-6" style="float: right;">
+                    <label class="control-label col-sm-6" for="email">Select Employee </label>
+                    <div class="col-sm-12">
+                      <select class="form-control" required name="userId" [(ngModel)]="userId" #myUserid="ngModel">
+                        <option>Select</option>
+                        <option *ngFor="let rm of rmArray" [value]=rm.userId>
+                          {{rm.name}}
+                        </option>
+                      </select>
+                    </div>
+                  </div> -->
+                    <div class="table-responsive" style="padding: 20px">
+                      <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                          <th>RM Name</th>
+                          <th>Customer Name</th>
+                          <th>Mobile Number</th>
+                          <th>Email</th>
+                          <th>Action</th>
+                          <!-- <th>Mapping Date</th> -->
+                        </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container *ngIf="mappedCustomerArray.length > 0; else elseTemplate">
+                              <tr  *ngFor="let c of mappedCustomerArray | paginate: { itemsPerPage: 5, currentPage: p }">
+                                  <td>{{c.name}}</td>
+                                  <td>{{c.customerName}}</td>
+                                  <td>{{c.contact}}</td>
+                                  <td>{{c.email}}</td>
+                                  <td><button class="btn btn-danger" (click)="unmapCustomerFromRM(c.id)">Remove</button></td>
+                                  <!-- <td>{{c.creationTime}}</td> -->
+                                </tr>
+                          </ng-container>
+                          <ng-template #elseTemplate>
+                              <tr><td colspan="5" style="text-align: center;color: red">It seems no <strong>Customer</strong> is mapped to any RM.</td></tr>
+                          </ng-template>
+
+
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </app-card>
+                  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+      </ngb-tabset>
+
+    </div>
+  </div>
+</div>
+
+<ng2-toasty [position]="position"></ng2-toasty>

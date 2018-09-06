@@ -1,0 +1,125 @@
+<div class="card">
+  <div class="card-block">
+      <div class="">
+          <div class="container">
+            <h2>Service Request form</h2>
+            <form [formGroup]="serviceRequestForm" (ngSubmit)="serviceRequest()" >
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" class="form-control" maxlength="40" id="email" placeholder="Enter Title" formControlName="title">
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <label for="query">Query:</label>
+                    <input type="text" class="form-control" maxlength="500" id="pwd" placeholder="Enter Query" formControlName="query">
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-group">
+                      <label for="query" style="visibility: hidden">Query:</label>
+                    <button type="submit" class="btn-success form-control"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <button type="submit" class="btn btn-success">Submit</button> -->
+            </form>
+          </div>
+        </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-block">
+    <ul class="media-list">
+      <li class="media">
+        <div class="messaging" style="width: 100%">
+          <div class="inbox_msg">
+            <div class="inbox_people">
+              <div class="headind_srch">
+                <div class="recent_heading">
+                  <h4>You Recent Queries</h4>
+                </div>
+                <!-- <div class="srch_bar">
+                  <div class="stylish-input-group">
+                    <input type="text" class="search-bar"  placeholder="Search" >
+                    <span class="input-group-addon">
+                    <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                    </span> </div>
+                </div> -->
+              </div>
+              <div class="inbox_chat">
+                <div *ngFor="let query of queries" >
+                  <div class="chat_list" (click)="openChat(query.queryId)">
+                    <div class="chat_people">
+                      <div class="chat_img">   <i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i> </div>
+                      <div class="chat_ib">
+                        <h5> <span class="chat_date">{{query.query}}</span></h5>
+                        <p>{{query.createTime}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mesgs">
+              <div class="msg_history">
+<!-- <li *ngFor="let item of responseList">{{item.response}}</li> -->
+
+
+
+                  <div class="" *ngFor="let item of responseList">
+                    <!-- <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div> -->
+                    <!-- <div class="incoming_msg_img">  <i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i> </div> -->
+                    <div class="chat-container container " *ngIf="item.customerId==currentUser">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <p>{{item.response}}</p>
+                        <span class="time-right" style="color: blue">{{item.createTime}}</span>
+                      </div>
+
+                      <div class="chat-container container darker" *ngIf="item.customerId!=currentUser" >
+                          <i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i>
+                        <p>{{item.response}}</p>
+                        <span class="time-left" style="color: white">{{item.createTime}}</span>
+                      </div>
+                      <!-- <div class="received_msg" *ngIf="item.customerId==currentUser">
+                          <div class="received_withd_msg">
+                            <p>{{item.response}}</p>
+                            <span class="time_date"> {{item.createTime}}</span></div>
+                        </div>
+
+                      <div class="sent_msg" *ngIf="item.customerId!=currentUser">
+                          <p>{{item.response}}</p>
+                          <span class="time_date">{{item.createTime}}</span>
+                        </div> -->
+
+
+                        <br>
+                  </div>
+
+
+
+
+              </div>
+              <div class="type_msg">
+                <div class="input_msg_write">
+                  <form [formGroup]="replyQueryForm" (ngSubmit)="replyQuery()">
+                    <input type="hidden" formControlName="queryId" [ngModel]="queryId" >
+                    <input formControlName="response" type="text" class="write_msg" placeholder="Type a message" />
+                    <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </li>
+    </ul>
+
+  </div>
+</div>
+<ng2-toasty [position]="position"></ng2-toasty>

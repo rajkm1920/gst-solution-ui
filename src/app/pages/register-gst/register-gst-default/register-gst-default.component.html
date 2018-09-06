@@ -1,0 +1,66 @@
+<div class="card">
+
+  <div class="card-header">
+    <h3 class="card-header-text">Register Your GST With us</h3>
+  </div>
+  <div class="card-body">
+    <div class="row">
+
+
+    <div class="col-md- col-xl-12">
+
+      <form  [formGroup]="profileForm" (ngSubmit)="addnewGSTN()" >
+
+       <div class="form-group row">
+          <div class="col-sm-6 ">
+            <h5><label>Legal Name</label></h5>
+              <input type="text" class="form-control " formControlName="legalName" placeholder="Enter Name" >
+             </div>
+      <div class="col-sm-6 ">
+          <h5><label>GST Number </label></h5>
+       <input type="text" class="form-control " formControlName="gstin" placeholder="Enter GSTN" >
+      </div>
+      </div>
+      <div class="form-group row">
+          <div class="col-sm-6 ">
+           <h5> <label>State </label></h5>
+              <select name="select" class="form-control " formControlName="stateId"  #stateId (ngModelChange)="fetchCeties(stateId.value)">
+                  <option *ngFor="let state of statesfatched" value="{{state.stateId}}" >{{state.state}}</option>
+              </select>
+             </div>
+      <div class="col-sm-6 ">
+          <h5><label>City</label></h5>
+       <select name="select" class="form-control " formControlName="cityId" placeholder="Enter District" >
+          <option *ngFor="let city of cityfatched" value="{{city.cityId}}" >{{city.city}}</option>
+      </select>
+      </div>
+
+      </div>
+      <div class="form-group row">
+          <div class="col-sm-6 ">
+            <h5><label>Business Legal Name</label></h5>
+              <input type="text" class="form-control " formControlName="businessName" placeholder="Enter Business Name"  >
+             </div>
+      <div class="col-sm-6 ">
+          <h5><label>Mobile </label></h5>
+       <input type="number" class="form-control" formControlName="contact"  placeholder="Enter Mobile " >
+      </div>
+      </div>
+
+
+      <div class="form-group row " >
+          <div class="col-sm-3"> </div>
+          <div class="col-sm-6 text-center">
+
+              <button type="submit" class="btn btn-grd-success ">Register</button>
+          </div>
+          <div class="col-sm-3"></div>
+
+      </div>
+      </form>
+      <!-- <button class="btn btn-primary waves-effect" (click)="addToast({title:'Bootstrap Toasty', msg:'Turning standard Bootstrap alerts into awesome notifications', showClose: true, timeout: 5000, theme:'bootstrap', type:'wait', position:'top-right', closeOther:true})">Top Right</button> -->
+    </div>
+    </div>
+  </div>
+  </div>
+  <ng2-toasty [position]="position"></ng2-toasty>
